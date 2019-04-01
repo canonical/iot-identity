@@ -2,6 +2,8 @@
 
 set -eu
 
+export GO111MODULE=off
+
 if ! which govendor >/dev/null;then
     export PATH="$PATH:${GOPATH%%:*}/bin"
 

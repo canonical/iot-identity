@@ -36,3 +36,6 @@ go run -mod=vendor cmd/identity/main.go
 
 The service listens on 8030 by default.
 
+## Contributing
+Before contributing you should sign [Canonical's contributor agreement][1],
+it’s the easiest way for you to give us permission to use your contributions.

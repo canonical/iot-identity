@@ -147,7 +147,7 @@ func TestStore_DeviceEnroll(t *testing.T) {
 
 	// Reply
 	exOrg := domain.Organization{ID: "abc", Name: "Example Inc", RootKey: []byte(rootPEM), RootCert: []byte(certPEM)}
-	dev1 := domain.Device{"example", "drone-1000", "DR1000A111", "example-store", "-----BEGIN GPG PUBLIC KEY-----\nMIIEpAIBAAKCAQ"}
+	dev1 := domain.Device{Brand: "example", Model: "drone-1000", SerialNumber: "DR1000A111", StoreID: "example-store", DeviceKey: "-----BEGIN GPG PUBLIC KEY-----\nMIIEpAIBAAKCAQ"}
 	reply1 := &domain.Enrollment{
 		ID:           "a111",
 		Organization: exOrg,
