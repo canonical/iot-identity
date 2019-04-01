@@ -1,3 +1,6 @@
+[![Build Status][travis-image]][travis-url]
+[![Go Report Card][goreportcard-image]][goreportcard-url]
+[![codecov][codecov-image]][codecov-url]
 # IoT Identity Service
 
 Managing the identity, ownership, credentials and authorization of an IoT device plays a crucial role in the security story. Those details need to be managed as the device goes through its lifecycle - from the manufacturer, distributor, system integrator, to end customer; from commissioning, repurposing to decommissioning the device.
@@ -39,3 +42,10 @@ The service listens on 8030 by default.
 ## Contributing
 Before contributing you should sign [Canonical's contributor agreement][1],
 it’s the easiest way for you to give us permission to use your contributions.
+
+[travis-image]: https://travis-ci.org/CanonicalLtd/iot-identity.svg?branch=master
+[travis-url]: https://travis-ci.org/CanonicalLtd/iot-identity
+[goreportcard-image]: https://goreportcard.com/badge/github.com/CanonicalLtd/iot-identity
+[goreportcard-url]: https://goreportcard.com/report/github.com/CanonicalLtd/iot-identity
+[codecov-url]: https://codecov.io/gh/CanonicalLtd/iot-identity
+[codecov-image]: https://codecov.io/gh/CanonicalLtd/iot-identity/branch/master/graph/badge.svg
