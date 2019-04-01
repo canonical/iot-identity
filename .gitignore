@@ -1,0 +1,4 @@
+.idea/
+main
+vendor/*/
+.secret

@@ -1,0 +1,151 @@
+{
+	"comment": "",
+	"ignore": "test",
+	"package": [
+		{
+			"checksumSHA1": "CSPbwbyzqA6sfORicn4HFtIhF/c=",
+			"path": "github.com/davecgh/go-spew/spew",
+			"revision": "d8f796af33cc11cb798c1aaeb27a4ebc5099927d",
+			"revisionTime": "2018-08-30T19:11:22Z"
+		},
+		{
+			"checksumSHA1": "WgzN84Tx+7en7p/e8gSTupIqygw=",
+			"path": "github.com/gorilla/mux",
+			"revision": "c5c6c98bc25355028a63748a498942a6398ccd22",
+			"revisionTime": "2019-03-16T13:32:43Z"
+		},
+		{
+			"checksumSHA1": "FFXOo9OAHgfVjXJv17MRucG+tdY=",
+			"path": "github.com/lib/pq",
+			"revision": "d6156e141ac6c06345c7c73f450987a9ed4b751f",
+			"revisionTime": "2019-03-26T04:20:56Z"
+		},
+		{
+			"checksumSHA1": "AU3fA8Sm33Vj9PBoRPSeYfxLRuE=",
+			"path": "github.com/lib/pq/oid",
+			"revision": "d6156e141ac6c06345c7c73f450987a9ed4b751f",
+			"revisionTime": "2019-03-26T04:20:56Z"
+		},
+		{
+			"checksumSHA1": "LuFv4/jlrmFNnDb/5SCSEPAM9vU=",
+			"path": "github.com/pmezard/go-difflib/difflib",
+			"revision": "5d4384ee4fb2527b0a1256a821ebfc92f91efefc",
+			"revisionTime": "2018-12-26T10:54:42Z"
+		},
+		{
+			"checksumSHA1": "HiVkabx8B3X3DgwUrFGbgyk31+M=",
+			"path": "github.com/snapcore/snapd/asserts",
+			"revision": "294b8c8aa3655feb5ff2b30b1dbfeffc8d096143",
+			"revisionTime": "2019-04-01T15:55:22Z"
+		},
+		{
+			"checksumSHA1": "+8WHbAnbRF5b+6Uh2IdogkDpkF8=",
+			"path": "github.com/snapcore/snapd/osutil",
+			"revision": "294b8c8aa3655feb5ff2b30b1dbfeffc8d096143",
+			"revisionTime": "2019-04-01T15:55:22Z"
+		},
+		{
+			"checksumSHA1": "EYRtD9fNCHSSnWkkZSNTAB63IhQ=",
+			"path": "github.com/snapcore/snapd/osutil/sys",
+			"revision": "294b8c8aa3655feb5ff2b30b1dbfeffc8d096143",
+			"revisionTime": "2019-04-01T15:55:22Z"
+		},
+		{
+			"checksumSHA1": "euRJnHIKCL9xraGcbh6cDv70/5M=",
+			"path": "github.com/snapcore/snapd/release",
+			"revision": "294b8c8aa3655feb5ff2b30b1dbfeffc8d096143",
+			"revisionTime": "2019-04-01T15:55:22Z"
+		},
+		{
+			"checksumSHA1": "8cx1437LBeh5AzUlvZMtocK1TNc=",
+			"path": "github.com/snapcore/snapd/selinux",
+			"revision": "294b8c8aa3655feb5ff2b30b1dbfeffc8d096143",
+			"revisionTime": "2019-04-01T15:55:22Z"
+		},
+		{
+			"checksumSHA1": "TxYZWi7537oQ7SR6hGsq634WDCU=",
+			"path": "github.com/snapcore/snapd/snap/naming",
+			"revision": "294b8c8aa3655feb5ff2b30b1dbfeffc8d096143",
+			"revisionTime": "2019-04-01T15:55:22Z"
+		},
+		{
+			"checksumSHA1": "CQcg5XSb5LwjdIfisVQ36G2s8tM=",
+			"path": "github.com/snapcore/snapd/strutil",
+			"revision": "294b8c8aa3655feb5ff2b30b1dbfeffc8d096143",
+			"revisionTime": "2019-04-01T15:55:22Z"
+		},
+		{
+			"checksumSHA1": "IIsn0Wdi5rHU8xca+FzDd+YeYlc=",
+			"path": "github.com/stretchr/testify/assert",
+			"revision": "34c6fa2dc70986bccbbffcc6130f6920a924b075",
+			"revisionTime": "2019-03-04T09:57:49Z"
+		},
+		{
+			"checksumSHA1": "zJybXQZcPAht+soLp/ozc9q5teE=",
+			"path": "golang.org/x/crypto/cast5",
+			"revision": "a5d413f7728c81fb97d96a2b722368945f651e78",
+			"revisionTime": "2019-03-25T14:57:12Z"
+		},
+		{
+			"checksumSHA1": "eo/KtdjieJQXH7Qy+faXFcF70ME=",
+			"path": "golang.org/x/crypto/openpgp/elgamal",
+			"revision": "a5d413f7728c81fb97d96a2b722368945f651e78",
+			"revisionTime": "2019-03-25T14:57:12Z"
+		},
+		{
+			"checksumSHA1": "rlxVSaGgqdAgwblsErxTxIfuGfg=",
+			"path": "golang.org/x/crypto/openpgp/errors",
+			"revision": "a5d413f7728c81fb97d96a2b722368945f651e78",
+			"revisionTime": "2019-03-25T14:57:12Z"
+		},
+		{
+			"checksumSHA1": "DwKua4mYaqKBGxCrwgLP2JqkPA0=",
+			"path": "golang.org/x/crypto/openpgp/packet",
+			"revision": "a5d413f7728c81fb97d96a2b722368945f651e78",
+			"revisionTime": "2019-03-25T14:57:12Z"
+		},
+		{
+			"checksumSHA1": "s2qT4UwvzBSkzXuiuMkowif1Olw=",
+			"path": "golang.org/x/crypto/openpgp/s2k",
+			"revision": "a5d413f7728c81fb97d96a2b722368945f651e78",
+			"revisionTime": "2019-03-25T14:57:12Z"
+		},
+		{
+			"checksumSHA1": "asZBHvcTKF5gVlI7AYnMlLXRYys=",
+			"path": "golang.org/x/crypto/sha3",
+			"revision": "a5d413f7728c81fb97d96a2b722368945f651e78",
+			"revisionTime": "2019-03-25T14:57:12Z"
+		},
+		{
+			"checksumSHA1": "GtamqiJoL7PGHsN454AoffBFMa8=",
+			"path": "golang.org/x/net/context",
+			"revision": "74de082e2cca95839e88aa0aeee5aadf6ce7710f",
+			"revisionTime": "2019-03-26T08:46:22Z"
+		},
+		{
+			"checksumSHA1": "c2uqM0KcVJ2SFu/9Nt4w63GZ9xo=",
+			"path": "golang.org/x/sys/cpu",
+			"revision": "9eb1bfa1ce65ae8a6ff3114b0aaf9a41a6cf3560",
+			"revisionTime": "2019-03-29T02:42:46Z"
+		},
+		{
+			"checksumSHA1": "FuXoNYVqeJARuYkOmPhreYmTf2M=",
+			"path": "golang.org/x/sys/unix",
+			"revision": "9eb1bfa1ce65ae8a6ff3114b0aaf9a41a6cf3560",
+			"revisionTime": "2019-03-29T02:42:46Z"
+		},
+		{
+			"checksumSHA1": "t95/FNK2nGCx3e6IARbO7OrcCuY=",
+			"path": "gopkg.in/tomb.v2",
+			"revision": "d5d1b5820637886def9eef33e03a27a9f166942c",
+			"revisionTime": "2016-12-08T15:16:19Z"
+		},
+		{
+			"checksumSHA1": "QqDq2x8XOU7IoOR98Cx1eiV5QY8=",
+			"path": "gopkg.in/yaml.v2",
+			"revision": "51d6538a90f86fe93ac480b35f37b2be17fef232",
+			"revisionTime": "2018-11-15T11:05:04Z"
+		}
+	],
+	"rootPath": "github.com/CanonicalLtd/iot-identity"
+}
