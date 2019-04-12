@@ -20,7 +20,6 @@
 package cert
 
 import (
-	"reflect"
 	"testing"
 
 	"github.com/CanonicalLtd/iot-identity/domain"
@@ -35,11 +34,10 @@ func TestCreateClientCert(t *testing.T) {
 	tests := []struct {
 		name    string
 		args    args
-		want    []byte
-		want1   []byte
 		wantErr bool
 	}{
-		{"invalid-path", args{&domain.Organization{Name: "Example PLC"}, "invalid", "abc123"}, nil, nil, true},
+		{"valid", args{&domain.Organization{Name: "Example PLC"}, "../../datastore/test_data", "abc123"}, false},
+		{"invalid-path", args{&domain.Organization{Name: "Example PLC"}, "invalid", "abc123"}, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -48,11 +46,11 @@ func TestCreateClientCert(t *testing.T) {
 				t.Errorf("CreateClientCert() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("CreateClientCert() got = %v, want %v", got, tt.want)
+			if got == nil && !tt.wantErr {
+				t.Errorf("CreateClientCert() got = %v, want cert", got)
 			}
-			if !reflect.DeepEqual(got1, tt.want1) {
-				t.Errorf("CreateClientCert() got1 = %v, want %v", got1, tt.want1)
+			if got1 == nil && !tt.wantErr {
+				t.Errorf("CreateClientCert() got1 = %v, want cert", got1)
 			}
 		})
 	}

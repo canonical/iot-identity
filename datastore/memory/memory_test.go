@@ -146,7 +146,7 @@ func TestStore_DeviceEnroll(t *testing.T) {
 	}
 
 	// Reply
-	exOrg := domain.Organization{ID: "abc", Name: "Example Inc", RootKey: []byte(rootPEM), RootCert: []byte(certPEM)}
+	exOrg := domain.Organization{ID: "abc", Name: "Example Inc", RootKey: []byte(RootPEM), RootCert: []byte(CertPEM)}
 	dev1 := domain.Device{Brand: "example", Model: "drone-1000", SerialNumber: "DR1000A111", StoreID: "example-store", DeviceKey: "-----BEGIN GPG PUBLIC KEY-----\nMIIEpAIBAAKCAQ"}
 	reply1 := &domain.Enrollment{
 		ID:           "a111",
@@ -183,7 +183,7 @@ func TestStore_DeviceEnroll(t *testing.T) {
 }
 
 func TestStore_OrganizationGetByName(t *testing.T) {
-	reply1 := domain.Organization{ID: "abc", Name: "Example Inc", RootKey: []byte(rootPEM), RootCert: []byte(certPEM)}
+	reply1 := domain.Organization{ID: "abc", Name: "Example Inc", RootKey: []byte(RootPEM), RootCert: []byte(CertPEM)}
 
 	type args struct {
 		name string

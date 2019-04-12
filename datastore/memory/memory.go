@@ -33,7 +33,7 @@ type Store struct {
 
 // NewStore creates a new memory store
 func NewStore() *Store {
-	exOrg := domain.Organization{ID: "abc", Name: "Example Inc", RootKey: []byte(rootPEM), RootCert: []byte(certPEM)}
+	exOrg := domain.Organization{ID: "abc", Name: "Example Inc", RootKey: []byte(RootPEM), RootCert: []byte(CertPEM)}
 	dev1 := domain.Device{Brand: "example", Model: "drone-1000", SerialNumber: "DR1000A111", StoreID: "", DeviceKey: ""}
 	dev2 := domain.Device{Brand: "example", Model: "drone-1000", SerialNumber: "DR1000B222", StoreID: "example-store", DeviceKey: "BBBBBBBBB"}
 	dev3 := domain.Device{Brand: "canonical", Model: "ubuntu-core-18-amd64", SerialNumber: "d75f7300-abbf-4c11-bf0a-8b7103038490", StoreID: "example-store", DeviceKey: "CCCCCCCC"}

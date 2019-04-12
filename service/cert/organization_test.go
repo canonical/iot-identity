@@ -20,7 +20,6 @@
 package cert
 
 import (
-	"reflect"
 	"testing"
 )
 
@@ -32,11 +31,10 @@ func TestCreateOrganizationCert(t *testing.T) {
 	tests := []struct {
 		name    string
 		args    args
-		want    []byte
-		want1   []byte
 		wantErr bool
 	}{
-		{"invalid-path", args{"invalid", "Example PLC"}, nil, nil, true},
+		{"valid", args{"../../datastore/test_data", "Example PLC"}, false},
+		{"invalid-path", args{"invalid", "Example PLC"}, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -45,11 +43,11 @@ func TestCreateOrganizationCert(t *testing.T) {
 				t.Errorf("CreateOrganizationCert() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("CreateOrganizationCert() got = %v, want %v", got, tt.want)
+			if got == nil && !tt.wantErr {
+				t.Errorf("CreateOrganizationCert() got = %v, want certificate", got)
 			}
-			if !reflect.DeepEqual(got1, tt.want1) {
-				t.Errorf("CreateOrganizationCert() got1 = %v, want %v", got1, tt.want1)
+			if got1 == nil && !tt.wantErr {
+				t.Errorf("CreateOrganizationCert() got1 = %v, want certificate", got1)
 			}
 		})
 	}

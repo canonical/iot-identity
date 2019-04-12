@@ -20,9 +20,9 @@
 package cert
 
 import (
-	"crypto/x509"
-	"reflect"
 	"testing"
+
+	"github.com/CanonicalLtd/iot-identity/datastore/memory"
 )
 
 func Test_getCertificateAuthority(t *testing.T) {
@@ -32,10 +32,10 @@ func Test_getCertificateAuthority(t *testing.T) {
 	tests := []struct {
 		name    string
 		args    args
-		want1   *x509.Certificate
 		wantErr bool
 	}{
-		{"invalid-path", args{"invalid"}, nil, true},
+		{"valid", args{"../../datastore/test_data"}, false},
+		{"invalid-path", args{"invalid"}, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -44,8 +44,60 @@ func Test_getCertificateAuthority(t *testing.T) {
 				t.Errorf("getCertificateAuthority() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			if !reflect.DeepEqual(got1, tt.want1) {
-				t.Errorf("getCertificateAuthority() got1 = %v, want %v", got1, tt.want1)
+			if !tt.wantErr {
+				if got1 == nil {
+					t.Errorf("getCertificateAuthority() got1 = %v, want certificate", got1)
+				}
+			}
+		})
+	}
+}
+
+func Test_parseRootCertificate(t *testing.T) {
+	type args struct {
+		rootCert []byte
+	}
+	tests := []struct {
+		name    string
+		args    args
+		wantErr bool
+	}{
+		{"valid", args{[]byte(memory.CertPEM)}, false},
+		{"invalid", args{[]byte("invalid")}, true},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := parseRootCertificate(tt.args.rootCert)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("parseRootCertificate() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !tt.wantErr {
+				if got == nil || got.SerialNumber == nil {
+					t.Errorf("parseRootCertificate() = %v, want CA", got)
+				}
+			}
+		})
+	}
+}
+
+func Test_certToPEM(t *testing.T) {
+	type args struct {
+		c []byte
+	}
+	tests := []struct {
+		name    string
+		args    args
+		wantErr bool
+	}{
+		{"valid", args{[]byte(memory.CertPEM)}, false},
+		{"valid", args{[]byte("invalid")}, true},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := certToPEM(tt.args.c)
+			if got == nil && !tt.wantErr {
+				t.Errorf("certToPEM() = %v, want success", got)
 			}
 		})
 	}

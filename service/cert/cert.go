@@ -68,7 +68,7 @@ func parseRootCertificate(rootCert []byte) (*x509.Certificate, error) {
 
 	block, _ := pem.Decode(rootCert)
 	if block == nil {
-		panic("failed to parse certificate PEM")
+		return nil, fmt.Errorf("failed to parse certificate PEM")
 	}
 	return x509.ParseCertificate(block.Bytes)
 }
