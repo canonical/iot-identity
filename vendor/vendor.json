@@ -33,6 +33,12 @@
 			"revisionTime": "2018-12-26T10:54:42Z"
 		},
 		{
+			"checksumSHA1": "ll+Va3U8P37U3saPXZW7f5B3RmY=",
+			"path": "github.com/segmentio/ksuid",
+			"revision": "7d859c5329d157d00c7d5a4ead1ce7a9d45eeda8",
+			"revisionTime": "2019-03-12T20:28:40Z"
+		},
+		{
 			"checksumSHA1": "HiVkabx8B3X3DgwUrFGbgyk31+M=",
 			"path": "github.com/snapcore/snapd/asserts",
 			"revision": "294b8c8aa3655feb5ff2b30b1dbfeffc8d096143",

@@ -33,8 +33,8 @@ const (
 type Organization struct {
 	ID       string `json:"id"`
 	Name     string `json:"name"`
-	RootCert []byte
-	RootKey  []byte
+	RootCert []byte `json:"rootcert"`
+	RootKey  []byte `json:"-"`
 }
 
 // Device details

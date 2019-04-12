@@ -39,18 +39,20 @@ const (
 	DefaultMQTTPort   = "8883"
 	DefaultConfigPath = "."
 	keyFilename       = ".secret"
+	DefaultCertsPath  = "certs"
 )
 
 var drivers = []string{"memory"}
 
 // Settings defines the application configuration
 type Settings struct {
-	Port       string
-	Driver     string
-	DataSource string
-	MQTTUrl    string
-	MQTTPort   string
-	KeySecret  string
+	Port         string
+	Driver       string
+	DataSource   string
+	MQTTUrl      string
+	MQTTPort     string
+	KeySecret    string
+	RootCertsDir string
 }
 
 // ParseArgs checks the command line arguments
@@ -62,6 +64,7 @@ func ParseArgs() *Settings {
 		mqttURL    string
 		mqttPort   string
 		configDir  string
+		certsDir   string
 	)
 	flag.StringVar(&port, "port", DefaultPort, "The port the service listens on")
 	flag.StringVar(&driver, "driver", DefaultDriver, "The data repository driver")
@@ -69,6 +72,7 @@ func ParseArgs() *Settings {
 	flag.StringVar(&mqttURL, "mqtturl", DefaultMQTTURL, "URL of the MQTT broker")
 	flag.StringVar(&mqttPort, "mqttport", DefaultMQTTPort, "Port of the MQTT broker")
 	flag.StringVar(&configDir, "configdir", DefaultConfigPath, "Directory path to the config file")
+	flag.StringVar(&certsDir, "certsdir", DefaultCertsPath, "Directory path to the root certificate files")
 	flag.Parse()
 
 	// Validate the driver
@@ -91,12 +95,13 @@ func ParseArgs() *Settings {
 	}
 
 	return &Settings{
-		Port:       port,
-		Driver:     driver,
-		DataSource: datasource,
-		MQTTUrl:    mqttURL,
-		MQTTPort:   mqttPort,
-		KeySecret:  secret,
+		Port:         port,
+		Driver:       driver,
+		DataSource:   datasource,
+		MQTTUrl:      mqttURL,
+		MQTTPort:     mqttPort,
+		KeySecret:    secret,
+		RootCertsDir: certsDir,
 	}
 }
 

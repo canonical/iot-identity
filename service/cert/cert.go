@@ -22,59 +22,37 @@ package cert
 import (
 	"crypto/rand"
 	"crypto/rsa"
+	"crypto/tls"
 	"crypto/x509"
-	"crypto/x509/pkix"
 	"encoding/pem"
 	"fmt"
+	"io/ioutil"
 	"math/big"
-	"time"
+	"path"
 )
 
-// CreateRootKeyCA generates the root key and certificate
-func CreateRootKeyCA(org, country string) ([]byte, []byte, error) {
-	// Create a root certificate template
-	serial, err := randomNumber()
+const (
+	rootCA    = "ca.crt"
+	rootCAKey = "ca.key"
+)
+
+// getCertificateAuthority loads the root certificate and key from the filesystem
+func getCertificateAuthority(certsPath string) (tls.Certificate, *x509.Certificate, error) {
+	ca := path.Join(certsPath, rootCA)
+	key := path.Join(certsPath, rootCAKey)
+	caKeyPair, err := tls.LoadX509KeyPair(ca, key)
 	if err != nil {
-		return nil, nil, err
+		return tls.Certificate{}, nil, fmt.Errorf("cannot read root CA: %v", err)
 	}
-	tpl := rootTemplate(org, country, serial)
-
-	// Generate RSA private key
-	privateKey, err := rsa.GenerateKey(rand.Reader, 2048)
+	caBytes, err := ioutil.ReadFile(ca)
 	if err != nil {
-		return nil, nil, err
+		return tls.Certificate{}, nil, fmt.Errorf("cannot read root CA: %v", err)
 	}
-	publicKey := &privateKey.PublicKey
-
-	// Create a self-signed certificate. template = parent
-	var parent = tpl
-	ca, err := x509.CreateCertificate(rand.Reader, tpl, parent, publicKey, privateKey)
-
-	// Create plain text PEM for CA
-	caPEM := certToPEM(ca)
-
-	// Create plain text PEM for key
-	keyPEM := keyToPEM(privateKey)
-
-	return keyPEM, caPEM, err
-}
-
-func rootTemplate(org, country string, serial *big.Int) *x509.Certificate {
-	return &x509.Certificate{
-		IsCA:                  true,
-		BasicConstraintsValid: true,
-		SubjectKeyId:          []byte{1, 2, 3},
-		SerialNumber:          serial,
-		Subject: pkix.Name{
-			Organization: []string{org},
-			Country:      []string{country},
-		},
-		NotBefore: time.Now(),
-		NotAfter:  time.Now().AddDate(10, 0, 0),
-		// see http://golang.org/pkg/crypto/x509/#KeyUsage
-		ExtKeyUsage: []x509.ExtKeyUsage{x509.ExtKeyUsageClientAuth, x509.ExtKeyUsageServerAuth},
-		KeyUsage:    x509.KeyUsageDigitalSignature | x509.KeyUsageCertSign,
+	caTemplate, err := parseRootCertificate(caBytes)
+	if err != nil {
+		return tls.Certificate{}, nil, fmt.Errorf("cannot read root CA: %v", err)
 	}
+	return caKeyPair, caTemplate, err
 }
 
 func randomNumber() (*big.Int, error) {

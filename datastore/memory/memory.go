@@ -21,8 +21,6 @@ package memory
 
 import (
 	"fmt"
-	"strconv"
-
 	"github.com/CanonicalLtd/iot-identity/datastore"
 	"github.com/CanonicalLtd/iot-identity/domain"
 )
@@ -38,6 +36,7 @@ func NewStore() *Store {
 	exOrg := domain.Organization{ID: "abc", Name: "Example Inc", RootKey: []byte(rootPEM), RootCert: []byte(certPEM)}
 	dev1 := domain.Device{Brand: "example", Model: "drone-1000", SerialNumber: "DR1000A111", StoreID: "", DeviceKey: ""}
 	dev2 := domain.Device{Brand: "example", Model: "drone-1000", SerialNumber: "DR1000B222", StoreID: "example-store", DeviceKey: "BBBBBBBBB"}
+	dev3 := domain.Device{Brand: "canonical", Model: "ubuntu-core-18-amd64", SerialNumber: "d75f7300-abbf-4c11-bf0a-8b7103038490", StoreID: "example-store", DeviceKey: "CCCCCCCC"}
 
 	return &Store{
 		Orgs: []domain.Organization{exOrg},
@@ -54,6 +53,12 @@ func NewStore() *Store {
 				Device:       dev2,
 				Status:       domain.StatusEnrolled,
 			},
+			{
+				ID:           "c333",
+				Organization: exOrg,
+				Device:       dev3,
+				Status:       domain.StatusWaiting,
+			},
 		},
 	}
 }
@@ -61,7 +66,8 @@ func NewStore() *Store {
 // OrganizationNew creates a new organization
 func (mem *Store) OrganizationNew(organization datastore.OrganizationNewRequest) (string, error) {
 	// Validate the organization
-	if len(organization.Name) == 0 || len(organization.RootKey) == 0 || len(organization.RootCert) == 0 {
+
+	if len(organization.Name) == 0 || len(organization.ServerKey) == 0 || len(organization.ServerCert) == 0 {
 		return "", fmt.Errorf("the name and root CA details must be provided")
 	}
 
@@ -73,12 +79,12 @@ func (mem *Store) OrganizationNew(organization datastore.OrganizationNewRequest)
 	}
 
 	// Store it
-	id := strconv.Itoa(len(mem.Orgs) + 1)
+	id := datastore.GenerateID()
 	o := domain.Organization{
 		ID:       id,
 		Name:     organization.Name,
-		RootKey:  organization.RootKey,
-		RootCert: organization.RootCert,
+		RootKey:  organization.ServerKey,
+		RootCert: organization.ServerCert,
 	}
 	mem.Orgs = append(mem.Orgs, o)
 	return id, nil
@@ -125,21 +131,25 @@ func (mem *Store) DeviceNew(device datastore.DeviceNewRequest) (string, error) {
 	}
 
 	// Store it
-	id := strconv.Itoa(len(mem.Roll) + 1)
+	deviceID := device.ID
+	if len(deviceID) == 0 {
+		deviceID = datastore.GenerateID()
+	}
+
 	d := domain.Device{
 		Brand:        device.Brand,
 		Model:        device.Model,
 		SerialNumber: device.SerialNumber,
 	}
 	e := domain.Enrollment{
-		ID:           id,
+		ID:           deviceID,
 		Organization: *o,
 		Device:       d,
 		Credentials:  device.Credentials,
 		Status:       domain.StatusWaiting,
 	}
 	mem.Roll = append(mem.Roll, e)
-	return id, nil
+	return deviceID, nil
 }
 
 // DeviceGet fetches a device registration

@@ -31,15 +31,15 @@ func TestStore_OrganizationNew(t *testing.T) {
 	req1 := datastore.OrganizationNewRequest{
 		Name:        "Example Ltd",
 		CountryName: "United Kingdom",
-		RootKey:     []byte("-----BEGIN RSA PRIVATE KEY-----\nMIIEpAIBAAKCAQEA4LzuMogDv9It"),
-		RootCert:    []byte("-----BEGIN CERTIFICATE-----\nMIICYzCCAUsCAQAwHjEcMBoGA1UECgwT"),
+		ServerKey:   []byte("-----BEGIN RSA PRIVATE KEY-----\nMIIEpAIBAAKCAQEA4LzuMogDv9It"),
+		ServerCert:  []byte("-----BEGIN CERTIFICATE-----\nMIICYzCCAUsCAQAwHjEcMBoGA1UECgwT"),
 	}
 	req2 := datastore.OrganizationNewRequest{}
 	req3 := datastore.OrganizationNewRequest{
 		Name:        "Example Inc",
 		CountryName: "United Kingdom",
-		RootKey:     []byte("-----BEGIN RSA PRIVATE KEY-----\nMIIEpAIBAAKCAQEA4LzuMogDv9It"),
-		RootCert:    []byte("-----BEGIN CERTIFICATE-----\nMIICYzCCAUsCAQAwHjEcMBoGA1UECgwT"),
+		ServerKey:   []byte("-----BEGIN RSA PRIVATE KEY-----\nMIIEpAIBAAKCAQEA4LzuMogDv9It"),
+		ServerCert:  []byte("-----BEGIN CERTIFICATE-----\nMIICYzCCAUsCAQAwHjEcMBoGA1UECgwT"),
 	}
 	type args struct {
 		organization datastore.OrganizationNewRequest
@@ -104,10 +104,10 @@ func TestStore_DeviceNew(t *testing.T) {
 		count   int
 		wantErr bool
 	}{
-		{"valid", args{req1}, 3, false},
-		{"invalid", args{req2}, 2, true},
-		{"duplicate", args{req3}, 2, true},
-		{"invalid-org", args{req4}, 2, true},
+		{"valid", args{req1}, 4, false},
+		{"invalid", args{req2}, 3, true},
+		{"duplicate", args{req3}, 3, true},
+		{"invalid-org", args{req4}, 3, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -123,7 +123,7 @@ func TestStore_DeviceNew(t *testing.T) {
 				}
 			}
 			if len(s.Roll) != tt.count {
-				t.Errorf("Store.DeviceNew() count = %v, want %v", len(s.Orgs), tt.count)
+				t.Errorf("Store.DeviceNew() count = %v, want %v", len(s.Roll), tt.count)
 			}
 		})
 	}

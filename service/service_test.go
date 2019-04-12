@@ -131,6 +131,7 @@ const ignoreError1 = "the device `canonical/canonical/d75f7300-abbf-4c11-bf0a-8b
 
 func TestIdentityService_RegisterOrganization(t *testing.T) {
 	settings := config.ParseArgs()
+	settings.RootCertsDir = "../datastore/test_data"
 	db := memory.NewStore()
 	req1 := RegisterOrganizationRequest{
 		Name:        "Example PLC",
@@ -172,7 +173,7 @@ func TestIdentityService_RegisterOrganization(t *testing.T) {
 }
 
 func TestIdentityService_RegisterDevice(t *testing.T) {
-	settings := &config.Settings{}
+	settings := &config.Settings{RootCertsDir: "../datastore/test_data"}
 	db := memory.NewStore()
 	req1 := RegisterDeviceRequest{
 		OrganizationID: "abc",
@@ -230,7 +231,7 @@ func TestIdentityService_RegisterDevice(t *testing.T) {
 }
 
 func TestIdentityService_Enroll(t *testing.T) {
-	settings := &config.Settings{}
+	settings := &config.Settings{RootCertsDir: "../datastore/test_data"}
 	db := memory.NewStore()
 	req1 := datastore.DeviceEnrollRequest{
 		Brand:        "example",
@@ -296,7 +297,7 @@ func TestIdentityService_Enroll(t *testing.T) {
 }
 
 func TestIdentityService_EnrollDevice(t *testing.T) {
-	settings := &config.Settings{}
+	settings := &config.Settings{RootCertsDir: "../datastore/test_data"}
 	db := memory.NewStore()
 
 	type args struct {
@@ -340,7 +341,7 @@ func TestIdentityService_EnrollDevice(t *testing.T) {
 				}
 			}
 			if !tt.wantErr {
-				if got != nil {
+				if got == nil {
 					t.Errorf("IdentityService.EnrollDevice() error = unexpected failed enrollment")
 				}
 			}

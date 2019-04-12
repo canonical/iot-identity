@@ -20,27 +20,25 @@
 package cert
 
 import (
-	"crypto/rand"
-	"crypto/rsa"
-	"crypto/tls"
 	"crypto/x509"
 	"crypto/x509/pkix"
-	"log"
+	"fmt"
 	"time"
-
-	"github.com/CanonicalLtd/iot-identity/domain"
 )
 
-// CreateClientCert creates a signed client certificate
-func CreateClientCert(org *domain.Organization, certsPath, deviceID string) ([]byte, []byte, error) {
+// CreateOrganizationCert creates a signed organization certificate
+func CreateOrganizationCert(certsPath, orgName string) ([]byte, []byte, error) {
 	// Get the parsed CA from the filesystem
 	caKeyPair, caTemplate, err := getCertificateAuthority(certsPath)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	template := clientTemplate(org.Name, deviceID)
+	template := orgTemplate(orgName)
 	privateKey, cert, err := createCertificate(template, caTemplate, caKeyPair)
+	if err != nil {
+		return nil, nil, fmt.Errorf("cannot create certificate: %v", err)
+	}
 
 	// Create plain text PEM for certificate
 	certPEM := certToPEM(cert)
@@ -51,21 +49,7 @@ func CreateClientCert(org *domain.Organization, certsPath, deviceID string) ([]b
 	return keyPEM, certPEM, err
 }
 
-func createCertificate(template, parentTemplate *x509.Certificate, keyPair tls.Certificate) (*rsa.PrivateKey, []byte, error) {
-	// Generate a private key
-	privateKey, _ := rsa.GenerateKey(rand.Reader, 2048)
-	pub := &privateKey.PublicKey
-
-	// Sign the certificate
-	cert, err := x509.CreateCertificate(rand.Reader, template, parentTemplate, pub, keyPair.PrivateKey)
-	if err != nil {
-		log.Println("Error creating client certificate:", err)
-		return nil, nil, err
-	}
-	return privateKey, cert, nil
-}
-
-func clientTemplate(name, deviceID string) *x509.Certificate {
+func orgTemplate(name string) *x509.Certificate {
 	serial, err := randomNumber()
 	if err != nil {
 		return nil
@@ -75,7 +59,6 @@ func clientTemplate(name, deviceID string) *x509.Certificate {
 	return &x509.Certificate{
 		SerialNumber: serial,
 		Subject: pkix.Name{
-			CommonName:   deviceID,
 			Organization: []string{name},
 		},
 		NotBefore:    time.Now(),

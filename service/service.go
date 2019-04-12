@@ -63,8 +63,8 @@ func (id IdentityService) RegisterOrganization(req *RegisterOrganizationRequest)
 		return "", fmt.Errorf("the organization '%s' has already been registered", req.Name)
 	}
 
-	// Create root key certificate authority
-	rootPEM, rootCA, err := cert.CreateRootKeyCA(req.Name, req.CountryName)
+	// Create server certificate for the organization
+	serverPEM, serverCA, err := cert.CreateOrganizationCert(id.Settings.RootCertsDir, req.Name)
 	if err != nil {
 		return "", err
 	}
@@ -73,9 +73,10 @@ func (id IdentityService) RegisterOrganization(req *RegisterOrganizationRequest)
 	o := datastore.OrganizationNewRequest{
 		Name:        req.Name,
 		CountryName: req.CountryName,
-		RootKey:     rootPEM,
-		RootCert:    rootCA,
+		ServerKey:   serverPEM,
+		ServerCert:  serverCA,
 	}
+	log.Println("---", o)
 
 	// Register the organization
 	return id.DB.OrganizationNew(o)
@@ -107,13 +108,15 @@ func (id IdentityService) RegisterDevice(req *RegisterDeviceRequest) (string, er
 	}
 
 	// Create a signed certificate
-	keyPEM, certPEM, err := cert.CreateClientCert(org)
+	deviceID := datastore.GenerateID()
+	keyPEM, certPEM, err := cert.CreateClientCert(org, id.Settings.RootCertsDir, deviceID)
 	if err != nil {
 		return "", err
 	}
 
 	// Create registration
 	d := datastore.DeviceNewRequest{
+		ID:             deviceID,
 		OrganizationID: req.OrganizationID,
 		Brand:          req.Brand,
 		Model:          req.Model,
@@ -148,7 +151,7 @@ func (id IdentityService) EnrollDevice(req *EnrollDeviceRequest) (*domain.Enroll
 	// Create the enrollment request
 	enroll := datastore.DeviceEnrollRequest{
 		Brand:        req.Model.Header("brand-id").(string),
-		Model:        req.Model.Header("brand-id").(string),
+		Model:        req.Model.Header("model").(string),
 		SerialNumber: req.Serial.Header("serial").(string),
 		DeviceKey:    req.Serial.Header("device-key").(string),
 	}

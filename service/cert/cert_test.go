@@ -17,37 +17,36 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package config
+package cert
 
 import (
-	"os"
+	"crypto/x509"
+	"reflect"
 	"testing"
-
-	"github.com/stretchr/testify/assert"
 )
 
-func TestParseArgs(t *testing.T) {
+func Test_getCertificateAuthority(t *testing.T) {
+	type args struct {
+		certsPath string
+	}
 	tests := []struct {
-		name string
+		name    string
+		args    args
+		want1   *x509.Certificate
+		wantErr bool
 	}{
-		{"default-settings-create"},
+		{"invalid-path", args{"invalid"}, nil, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			t.Parallel()
-			{
-				got := ParseArgs()
-				assert.Equal(t, DefaultPort, got.Port, tt.name)
-				assert.Equal(t, DefaultDriver, got.Driver, tt.name)
-				assert.Equal(t, DefaultDataSource, got.DataSource, tt.name)
-				assert.Equal(t, DefaultMQTTURL, got.MQTTUrl, tt.name)
-				assert.Equal(t, DefaultMQTTPort, got.MQTTPort, tt.name)
-				assert.Equal(t, DefaultCertsPath, got.RootCertsDir, tt.name)
-				assert.True(t, len(got.KeySecret) > 0, "secret not generated")
-
-				_ = os.Remove(keyFilename)
+			_, got1, err := getCertificateAuthority(tt.args.certsPath)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("getCertificateAuthority() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got1, tt.want1) {
+				t.Errorf("getCertificateAuthority() got1 = %v, want %v", got1, tt.want1)
 			}
 		})
 	}
-
 }

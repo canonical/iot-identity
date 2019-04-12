@@ -19,7 +19,10 @@
 
 package datastore
 
-import "github.com/CanonicalLtd/iot-identity/domain"
+import (
+	"github.com/CanonicalLtd/iot-identity/domain"
+	"github.com/segmentio/ksuid"
+)
 
 // DataStore is the interfaces for the data repository
 type DataStore interface {
@@ -35,12 +38,13 @@ type DataStore interface {
 type OrganizationNewRequest struct {
 	Name        string
 	CountryName string
-	RootKey     []byte
-	RootCert    []byte
+	ServerKey   []byte
+	ServerCert  []byte
 }
 
 // DeviceNewRequest is the request to create a new device
 type DeviceNewRequest struct {
+	ID             string
 	OrganizationID string
 	Brand          string
 	Model          string
@@ -56,4 +60,10 @@ type DeviceEnrollRequest struct {
 	SerialNumber string
 	DeviceKey    string
 	StoreID      string
+}
+
+// GenerateID generates a unique ID
+func GenerateID() string {
+	id := ksuid.New()
+	return id.String()
 }

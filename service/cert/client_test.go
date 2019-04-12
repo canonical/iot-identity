@@ -17,37 +17,43 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package config
+package cert
 
 import (
-	"os"
+	"reflect"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
+	"github.com/CanonicalLtd/iot-identity/domain"
 )
 
-func TestParseArgs(t *testing.T) {
+func TestCreateClientCert(t *testing.T) {
+	type args struct {
+		org       *domain.Organization
+		certsPath string
+		deviceID  string
+	}
 	tests := []struct {
-		name string
+		name    string
+		args    args
+		want    []byte
+		want1   []byte
+		wantErr bool
 	}{
-		{"default-settings-create"},
+		{"invalid-path", args{&domain.Organization{Name: "Example PLC"}, "invalid", "abc123"}, nil, nil, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			t.Parallel()
-			{
-				got := ParseArgs()
-				assert.Equal(t, DefaultPort, got.Port, tt.name)
-				assert.Equal(t, DefaultDriver, got.Driver, tt.name)
-				assert.Equal(t, DefaultDataSource, got.DataSource, tt.name)
-				assert.Equal(t, DefaultMQTTURL, got.MQTTUrl, tt.name)
-				assert.Equal(t, DefaultMQTTPort, got.MQTTPort, tt.name)
-				assert.Equal(t, DefaultCertsPath, got.RootCertsDir, tt.name)
-				assert.True(t, len(got.KeySecret) > 0, "secret not generated")
-
-				_ = os.Remove(keyFilename)
+			got, got1, err := CreateClientCert(tt.args.org, tt.args.certsPath, tt.args.deviceID)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("CreateClientCert() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("CreateClientCert() got = %v, want %v", got, tt.want)
+			}
+			if !reflect.DeepEqual(got1, tt.want1) {
+				t.Errorf("CreateClientCert() got1 = %v, want %v", got1, tt.want1)
 			}
 		})
 	}
-
 }
