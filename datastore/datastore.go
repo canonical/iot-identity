@@ -37,7 +37,8 @@ type DataStore interface {
 	DeviceEnroll(device common.DeviceEnrollRequest) (*domain.Enrollment, error)
 }
 
-// Factory method to create data store based on driver selected in settings.
+// New is the factory method to create data store based
+// on driver selected in settings.
 func New(settings *config.Settings) (DataStore, error) {
 	if settings.Driver == "memory" {
 		db := memory.NewStore()
