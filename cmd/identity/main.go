@@ -23,14 +23,20 @@ import (
 	"log"
 
 	"github.com/CanonicalLtd/iot-identity/config"
-	"github.com/CanonicalLtd/iot-identity/datastore/memory"
+	"github.com/CanonicalLtd/iot-identity/datastore"
 	"github.com/CanonicalLtd/iot-identity/service"
 	"github.com/CanonicalLtd/iot-identity/web"
 )
 
 func main() {
 	settings := config.ParseArgs()
-	db := memory.NewStore()
+
+	// Create the data store
+	db, err := datastore.New(settings)
+	if err != nil {
+		log.Fatal("Error creating datastore", err)
+	}
+
 	srv := service.NewIdentityService(settings, db)
 
 	// Start the web service

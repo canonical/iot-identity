@@ -20,50 +20,29 @@
 package datastore
 
 import (
+	"errors"
+	"github.com/CanonicalLtd/iot-identity/config"
+	"github.com/CanonicalLtd/iot-identity/datastore/common"
+	"github.com/CanonicalLtd/iot-identity/datastore/memory"
 	"github.com/CanonicalLtd/iot-identity/domain"
-	"github.com/segmentio/ksuid"
 )
 
 // DataStore is the interfaces for the data repository
 type DataStore interface {
-	OrganizationNew(organization OrganizationNewRequest) (string, error)
+	OrganizationNew(organization common.OrganizationNewRequest) (string, error)
 	OrganizationGet(id string) (*domain.Organization, error)
 	OrganizationGetByName(name string) (*domain.Organization, error)
-	DeviceNew(device DeviceNewRequest) (string, error)
+	DeviceNew(device common.DeviceNewRequest) (string, error)
 	DeviceGet(brand, model, serial string) (*domain.Enrollment, error)
-	DeviceEnroll(device DeviceEnrollRequest) (*domain.Enrollment, error)
+	DeviceEnroll(device common.DeviceEnrollRequest) (*domain.Enrollment, error)
 }
 
-// OrganizationNewRequest is the request to create a new organization
-type OrganizationNewRequest struct {
-	Name        string
-	CountryName string
-	ServerKey   []byte
-	ServerCert  []byte
-}
+// Factory method to create data store based on driver selected in settings.
+func New(settings *config.Settings) (DataStore, error) {
+	if settings.Driver == "memory" {
+		db := memory.NewStore()
+		return db, nil
+	}
 
-// DeviceNewRequest is the request to create a new device
-type DeviceNewRequest struct {
-	ID             string
-	OrganizationID string
-	Brand          string
-	Model          string
-	SerialNumber   string
-	Credentials    domain.Credentials
-}
-
-// DeviceEnrollRequest is the request to enroll a device.
-// The details come from the model and serial assertion
-type DeviceEnrollRequest struct {
-	Brand        string
-	Model        string
-	SerialNumber string
-	DeviceKey    string
-	StoreID      string
-}
-
-// GenerateID generates a unique ID
-func GenerateID() string {
-	id := ksuid.New()
-	return id.String()
+	return nil, errors.New("Unknown DataStore driver supplied")
 }

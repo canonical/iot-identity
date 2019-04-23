@@ -25,6 +25,7 @@ import (
 
 	"github.com/CanonicalLtd/iot-identity/config"
 	"github.com/CanonicalLtd/iot-identity/datastore"
+	"github.com/CanonicalLtd/iot-identity/datastore/common"
 	"github.com/CanonicalLtd/iot-identity/domain"
 	"github.com/CanonicalLtd/iot-identity/service/cert"
 	"github.com/snapcore/snapd/asserts"
@@ -70,7 +71,7 @@ func (id IdentityService) RegisterOrganization(req *RegisterOrganizationRequest)
 	}
 
 	// Create registration
-	o := datastore.OrganizationNewRequest{
+	o := common.OrganizationNewRequest{
 		Name:        req.Name,
 		CountryName: req.CountryName,
 		ServerKey:   serverPEM,
@@ -108,14 +109,14 @@ func (id IdentityService) RegisterDevice(req *RegisterDeviceRequest) (string, er
 	}
 
 	// Create a signed certificate
-	deviceID := datastore.GenerateID()
+	deviceID := common.GenerateID()
 	keyPEM, certPEM, err := cert.CreateClientCert(org, id.Settings.RootCertsDir, deviceID)
 	if err != nil {
 		return "", err
 	}
 
 	// Create registration
-	d := datastore.DeviceNewRequest{
+	d := common.DeviceNewRequest{
 		ID:             deviceID,
 		OrganizationID: req.OrganizationID,
 		Brand:          req.Brand,
@@ -149,7 +150,7 @@ func (id IdentityService) EnrollDevice(req *EnrollDeviceRequest) (*domain.Enroll
 	}
 
 	// Create the enrollment request
-	enroll := datastore.DeviceEnrollRequest{
+	enroll := common.DeviceEnrollRequest{
 		Brand:        req.Model.Header("brand-id").(string),
 		Model:        req.Model.Header("model").(string),
 		SerialNumber: req.Serial.Header("serial").(string),
@@ -163,7 +164,7 @@ func (id IdentityService) EnrollDevice(req *EnrollDeviceRequest) (*domain.Enroll
 }
 
 // Enroll connects an IoT device with the service
-func (id IdentityService) enroll(enroll *datastore.DeviceEnrollRequest) (*domain.Enrollment, error) {
+func (id IdentityService) enroll(enroll *common.DeviceEnrollRequest) (*domain.Enrollment, error) {
 	// Get the registration for the device
 	dev, err := id.DB.DeviceGet(enroll.Brand, enroll.Model, enroll.SerialNumber)
 	if err != nil {
