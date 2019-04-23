@@ -23,7 +23,7 @@ import (
 	"database/sql"
 
 	"github.com/CanonicalLtd/iot-identity/config"
-	"github.com/CanonicalLtd/iot-identity/datastore"
+	"github.com/CanonicalLtd/iot-identity/datastore/common"
 	"github.com/CanonicalLtd/iot-identity/domain"
 	_ "github.com/lib/pq" // postgresql driver
 )
@@ -47,7 +47,7 @@ func (pg *Store) createTables() error {
 }
 
 // OrganizationNew creates a new organization
-func (pg *Store) OrganizationNew(organization datastore.OrganizationNewRequest) (string, error) {
+func (pg *Store) OrganizationNew(organization common.OrganizationNewRequest) (string, error) {
 	panic("implement me")
 }
 
@@ -62,7 +62,7 @@ func (pg *Store) OrganizationGetByName(name string) (*domain.Organization, error
 }
 
 // DeviceNew creates a new device registration
-func (pg *Store) DeviceNew(device datastore.DeviceNewRequest) (string, error) {
+func (pg *Store) DeviceNew(device common.DeviceNewRequest) (string, error) {
 	panic("implement me")
 }
 
@@ -72,6 +72,6 @@ func (pg *Store) DeviceGet(brand, model, serial string) (*domain.Enrollment, err
 }
 
 // DeviceEnroll enrols a device with the IoT service
-func (pg *Store) DeviceEnroll(device datastore.DeviceEnrollRequest) (*domain.Enrollment, error) {
+func (pg *Store) DeviceEnroll(device common.DeviceEnrollRequest) (*domain.Enrollment, error) {
 	panic("implement me")
 }
