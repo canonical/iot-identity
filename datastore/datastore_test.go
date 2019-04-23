@@ -17,29 +17,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package main
+package datastore
 
 import (
-	"log"
+	"testing"
 
 	"github.com/CanonicalLtd/iot-identity/config"
-	"github.com/CanonicalLtd/iot-identity/datastore"
-	"github.com/CanonicalLtd/iot-identity/service"
-	"github.com/CanonicalLtd/iot-identity/web"
 )
 
-func main() {
-	settings := config.ParseArgs()
+func TestDatastore_New(t *testing.T) {
+	settings := config.Settings{Driver: "memory"}
 
-	// Create the data store
-	db, err := datastore.New(settings)
+	db, err := New(&settings)
 	if err != nil {
-		log.Fatal("Error creating datastore", err)
+		t.Errorf("datastore.New() error = %v", err)
 	}
 
-	srv := service.NewIdentityService(settings, db)
+	if db == nil {
+		t.Errorf("datastore.New() error = memory not created")
+	}
+}
 
-	// Start the web service
-	w := web.NewIdentityService(settings, srv)
-	log.Fatal(w.Run())
+func TestDatastore_NewNegative(t *testing.T) {
+	settings := config.Settings{Driver: "garbage"}
+
+	_, err := New(&settings)
+	if err == nil {
+		t.Errorf("datastore.New() error = no err for incorrect driver")
+	}
 }

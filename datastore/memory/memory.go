@@ -21,7 +21,7 @@ package memory
 
 import (
 	"fmt"
-	"github.com/CanonicalLtd/iot-identity/datastore"
+	"github.com/CanonicalLtd/iot-identity/datastore/common"
 	"github.com/CanonicalLtd/iot-identity/domain"
 )
 
@@ -64,7 +64,7 @@ func NewStore() *Store {
 }
 
 // OrganizationNew creates a new organization
-func (mem *Store) OrganizationNew(organization datastore.OrganizationNewRequest) (string, error) {
+func (mem *Store) OrganizationNew(organization common.OrganizationNewRequest) (string, error) {
 	// Validate the organization
 
 	if len(organization.Name) == 0 || len(organization.ServerKey) == 0 || len(organization.ServerCert) == 0 {
@@ -79,7 +79,7 @@ func (mem *Store) OrganizationNew(organization datastore.OrganizationNewRequest)
 	}
 
 	// Store it
-	id := datastore.GenerateID()
+	id := common.GenerateID()
 	o := domain.Organization{
 		ID:       id,
 		Name:     organization.Name,
@@ -111,7 +111,7 @@ func (mem *Store) OrganizationGet(id string) (*domain.Organization, error) {
 }
 
 // DeviceNew creates a new device registration
-func (mem *Store) DeviceNew(device datastore.DeviceNewRequest) (string, error) {
+func (mem *Store) DeviceNew(device common.DeviceNewRequest) (string, error) {
 	// Validate
 	if len(device.Brand) == 0 || len(device.Model) == 0 || len(device.SerialNumber) == 0 || len(device.OrganizationID) == 0 {
 		return "", fmt.Errorf("the provided device details are incomplete")
@@ -133,7 +133,7 @@ func (mem *Store) DeviceNew(device datastore.DeviceNewRequest) (string, error) {
 	// Store it
 	deviceID := device.ID
 	if len(deviceID) == 0 {
-		deviceID = datastore.GenerateID()
+		deviceID = common.GenerateID()
 	}
 
 	d := domain.Device{
@@ -163,7 +163,7 @@ func (mem *Store) DeviceGet(brand, model, serial string) (*domain.Enrollment, er
 }
 
 // DeviceEnroll enrols a device with the IoT service
-func (mem *Store) DeviceEnroll(device datastore.DeviceEnrollRequest) (*domain.Enrollment, error) {
+func (mem *Store) DeviceEnroll(device common.DeviceEnrollRequest) (*domain.Enrollment, error) {
 	// Get the registered device
 	reg, err := mem.DeviceGet(device.Brand, device.Model, device.SerialNumber)
 	if err != nil {

@@ -23,26 +23,26 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/CanonicalLtd/iot-identity/datastore"
+	"github.com/CanonicalLtd/iot-identity/datastore/common"
 	"github.com/CanonicalLtd/iot-identity/domain"
 )
 
 func TestStore_OrganizationNew(t *testing.T) {
-	req1 := datastore.OrganizationNewRequest{
+	req1 := common.OrganizationNewRequest{
 		Name:        "Example Ltd",
 		CountryName: "United Kingdom",
 		ServerKey:   []byte("-----BEGIN RSA PRIVATE KEY-----\nMIIEpAIBAAKCAQEA4LzuMogDv9It"),
 		ServerCert:  []byte("-----BEGIN CERTIFICATE-----\nMIICYzCCAUsCAQAwHjEcMBoGA1UECgwT"),
 	}
-	req2 := datastore.OrganizationNewRequest{}
-	req3 := datastore.OrganizationNewRequest{
+	req2 := common.OrganizationNewRequest{}
+	req3 := common.OrganizationNewRequest{
 		Name:        "Example Inc",
 		CountryName: "United Kingdom",
 		ServerKey:   []byte("-----BEGIN RSA PRIVATE KEY-----\nMIIEpAIBAAKCAQEA4LzuMogDv9It"),
 		ServerCert:  []byte("-----BEGIN CERTIFICATE-----\nMIICYzCCAUsCAQAwHjEcMBoGA1UECgwT"),
 	}
 	type args struct {
-		organization datastore.OrganizationNewRequest
+		organization common.OrganizationNewRequest
 	}
 	tests := []struct {
 		name    string
@@ -75,20 +75,20 @@ func TestStore_OrganizationNew(t *testing.T) {
 }
 
 func TestStore_DeviceNew(t *testing.T) {
-	req1 := datastore.DeviceNewRequest{
+	req1 := common.DeviceNewRequest{
 		OrganizationID: "abc",
 		Brand:          "example",
 		Model:          "drone-1000",
 		SerialNumber:   "b222",
 	}
-	req2 := datastore.DeviceNewRequest{}
-	req3 := datastore.DeviceNewRequest{
+	req2 := common.DeviceNewRequest{}
+	req3 := common.DeviceNewRequest{
 		OrganizationID: "abc",
 		Brand:          "example",
 		Model:          "drone-1000",
 		SerialNumber:   "DR1000A111",
 	}
-	req4 := datastore.DeviceNewRequest{
+	req4 := common.DeviceNewRequest{
 		OrganizationID: "invalid",
 		Brand:          "example",
 		Model:          "drone-1000",
@@ -96,7 +96,7 @@ func TestStore_DeviceNew(t *testing.T) {
 	}
 
 	type args struct {
-		device datastore.DeviceNewRequest
+		device common.DeviceNewRequest
 	}
 	tests := []struct {
 		name    string
@@ -130,14 +130,14 @@ func TestStore_DeviceNew(t *testing.T) {
 }
 
 func TestStore_DeviceEnroll(t *testing.T) {
-	req1 := datastore.DeviceEnrollRequest{
+	req1 := common.DeviceEnrollRequest{
 		Brand:        "example",
 		Model:        "drone-1000",
 		SerialNumber: "DR1000A111",
 		StoreID:      "example-store",
 		DeviceKey:    "-----BEGIN GPG PUBLIC KEY-----\nMIIEpAIBAAKCAQ",
 	}
-	req2 := datastore.DeviceEnrollRequest{
+	req2 := common.DeviceEnrollRequest{
 		Brand:        "invalid",
 		Model:        "drone-1000",
 		SerialNumber: "DR1000A111",
@@ -156,7 +156,7 @@ func TestStore_DeviceEnroll(t *testing.T) {
 	}
 
 	type args struct {
-		device datastore.DeviceEnrollRequest
+		device common.DeviceEnrollRequest
 	}
 	tests := []struct {
 		name    string

@@ -26,7 +26,7 @@ import (
 
 	"github.com/CanonicalLtd/iot-identity/config"
 	"github.com/CanonicalLtd/iot-identity/datastore"
-	"github.com/CanonicalLtd/iot-identity/datastore/memory"
+	"github.com/CanonicalLtd/iot-identity/datastore/common"
 )
 
 const model1 = `type: model
@@ -132,7 +132,11 @@ const ignoreError1 = "the device `canonical/canonical/d75f7300-abbf-4c11-bf0a-8b
 func TestIdentityService_RegisterOrganization(t *testing.T) {
 	settings := config.ParseArgs()
 	settings.RootCertsDir = "../datastore/test_data"
-	db := memory.NewStore()
+	settings.Driver = "memory"
+	db, err := datastore.New(settings)
+	if err != nil {
+		t.Error("datastore.New() = DataStore not created")
+	}
 	req1 := RegisterOrganizationRequest{
 		Name:        "Example PLC",
 		CountryName: "United Kingdom",
@@ -174,7 +178,11 @@ func TestIdentityService_RegisterOrganization(t *testing.T) {
 
 func TestIdentityService_RegisterDevice(t *testing.T) {
 	settings := &config.Settings{RootCertsDir: "../datastore/test_data"}
-	db := memory.NewStore()
+	settings.Driver = "memory"
+	db, err := datastore.New(settings)
+	if err != nil {
+		t.Error("datastore.New() = DataStore not created")
+	}
 	req1 := RegisterDeviceRequest{
 		OrganizationID: "abc",
 		Brand:          "example",
@@ -232,29 +240,33 @@ func TestIdentityService_RegisterDevice(t *testing.T) {
 
 func TestIdentityService_Enroll(t *testing.T) {
 	settings := &config.Settings{RootCertsDir: "../datastore/test_data"}
-	db := memory.NewStore()
-	req1 := datastore.DeviceEnrollRequest{
+	settings.Driver = "memory"
+	db, err := datastore.New(settings)
+	if err != nil {
+		t.Error("datastore.New() = DataStore not created")
+	}
+	req1 := common.DeviceEnrollRequest{
 		Brand:        "example",
 		Model:        "drone-1000",
 		SerialNumber: "DR1000A111",
 		StoreID:      "example-store",
 		DeviceKey:    "AAAAAAAA",
 	}
-	req2 := datastore.DeviceEnrollRequest{
+	req2 := common.DeviceEnrollRequest{
 		Brand:        "invalid",
 		Model:        "drone-1000",
 		SerialNumber: "DR1000A111",
 		StoreID:      "example-store",
 		DeviceKey:    "-----BEGIN GPG PUBLIC KEY-----\nMIIEpAIBAAKCAQ",
 	}
-	req3 := datastore.DeviceEnrollRequest{
+	req3 := common.DeviceEnrollRequest{
 		Brand:        "example",
 		Model:        "drone-1000",
 		SerialNumber: "DR1000B222",
 		StoreID:      "example-store",
 		DeviceKey:    "-----BEGIN GPG PUBLIC KEY-----\nMIIEpAIBAAKCAQ",
 	}
-	req4 := datastore.DeviceEnrollRequest{
+	req4 := common.DeviceEnrollRequest{
 		Brand:        "",
 		Model:        "drone-1000",
 		SerialNumber: "DR1000B222",
@@ -263,7 +275,7 @@ func TestIdentityService_Enroll(t *testing.T) {
 	}
 
 	type args struct {
-		req datastore.DeviceEnrollRequest
+		req common.DeviceEnrollRequest
 	}
 	tests := []struct {
 		name    string
@@ -298,7 +310,11 @@ func TestIdentityService_Enroll(t *testing.T) {
 
 func TestIdentityService_EnrollDevice(t *testing.T) {
 	settings := &config.Settings{RootCertsDir: "../datastore/test_data"}
-	db := memory.NewStore()
+	settings.Driver = "memory"
+	db, err := datastore.New(settings)
+	if err != nil {
+		t.Error("datastore.New() = DataStore not created")
+	}
 
 	type args struct {
 		model  string
