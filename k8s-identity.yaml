@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: identity
+spec:
+  selector:
+    matchLabels:
+      app: identity
+      tier: frontend
+      track: stable
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: identity
+        tier: frontend
+        track: stable
+    spec:
+      containers:
+        - name: identity
+          image: iot-identity
+          imagePullPolicy: Never
+          env:
+            - name: PORT
+              value: "8030"
+            - name: DRIVER
+              value: "postgres"
+            - name: DATASOURCE
+              value: "dbname=identity host=postgres-identity user=manager password=6Yu3zqLmkR45 sslmode=disable"
+            - name: MQTTURL
+              value: "192.168.64.11"
+            - name: MQTTPORT
+              value: "8883"
+            - name: CERTSDIR
+              value: "/srv/certs"
+          ports:
+            - containerPort: 8030
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: identity
+spec:
+  selector:
+    app: identity
+    tier: frontend
+  ports:
+    - port: 8030
+      protocol: TCP

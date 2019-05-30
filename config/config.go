@@ -42,7 +42,7 @@ const (
 	DefaultCertsPath  = "certs"
 )
 
-var drivers = []string{"memory"}
+var drivers = []string{"memory", "postgres"}
 
 // Settings defines the application configuration
 type Settings struct {

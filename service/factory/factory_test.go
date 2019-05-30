@@ -1,7 +1,7 @@
 // -*- Mode: Go; indent-tabs-mode: t -*-
 
 /*
- * This file is part of the IoT Identity Service
+ * This file is part of the IoT Management Service
  * Copyright 2019 Canonical Ltd.
  *
  * This program is free software: you can redistribute it and/or modify it
@@ -17,29 +17,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package main
+package factory
 
 import (
-	"github.com/CanonicalLtd/iot-identity/service/factory"
-	"log"
-
 	"github.com/CanonicalLtd/iot-identity/config"
-	"github.com/CanonicalLtd/iot-identity/service"
-	"github.com/CanonicalLtd/iot-identity/web"
+	"testing"
 )
 
-func main() {
-	settings := config.ParseArgs()
-
-	// Open the connection to the database
-	db, err := factory.CreateDataStore(settings)
-	if err != nil {
-		log.Fatalf("Error accessing data store: %v", settings.Driver)
+func TestCreateDataStore(t *testing.T) {
+	tests := []struct {
+		name    string
+		wantErr bool
+	}{
+		{"valid", false},
 	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			settings := config.ParseArgs()
 
-	srv := service.NewIdentityService(settings, db)
-
-	// Start the web service
-	w := web.NewIdentityService(settings, srv)
-	log.Fatal(w.Run())
+			_, err := CreateDataStore(settings)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("CreateDataStore() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+		})
+	}
 }

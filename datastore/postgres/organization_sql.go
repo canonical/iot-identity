@@ -22,9 +22,25 @@ package postgres
 const createOrganizationTableSQL string = `
 	CREATE TABLE IF NOT EXISTS organization (
 		id               varchar(200) primary key not null,
-		name             varchar(200) not null unique,
-		rootcert         text not null,
-		rootkey          text not null,
-        UNIQUE (name)
+		org_id           varchar(200) not null unique,
+		name             varchar(200) not null,
+		country_name     varchar(200) default '',
+		root_cert         text not null,
+		root_key          text not null,
+        UNIQUE (org_id)
 	)
 `
+
+const createOrganizationSQL = `
+insert into organization (org_id, name, country_name, root_cert, root_key)
+values ($1,$2,$3,$4,$5) RETURNING id`
+
+const getOrganizationSQL = `
+select id, org_id, name, country_name, root_cert, root_key
+from organization
+where org_id=$1`
+
+const getOrganizationByNameSQL = `
+select id, org_id, name, country_name, root_cert, root_key
+from organization
+where name=$1`

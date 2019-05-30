@@ -1,0 +1,81 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-config-identity
+  labels:
+    app: postgres-identity
+data:
+  POSTGRES_DB: identity
+  POSTGRES_USER: manager
+  POSTGRES_PASSWORD: 6Yu3zqLmkR45
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: postgres-pv-volume-identity
+  labels:
+    type: local
+    app: postgres-identity
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: "/mnt/data"
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: postgres-pv-claim-identity
+  labels:
+    app: postgres-identity
+spec:
+  #storageClassName: manual
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: postgres-identity
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: postgres-identity
+    spec:
+      containers:
+        - name: postgres-identity
+          image: postgres:10.4
+          imagePullPolicy: "IfNotPresent"
+          ports:
+            - containerPort: 5432
+          envFrom:
+            - configMapRef:
+                name: postgres-config-identity
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: postgredb
+      volumes:
+        - name: postgredb
+          persistentVolumeClaim:
+            claimName: postgres-pv-claim-identity
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-identity
+  labels:
+    app: postgres-identity
+spec:
+  type: NodePort
+  ports:
+    - port: 5432
+  selector:
+    app: postgres-identity

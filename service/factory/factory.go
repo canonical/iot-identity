@@ -1,7 +1,7 @@
 // -*- Mode: Go; indent-tabs-mode: t -*-
 
 /*
- * This file is part of the IoT Identity Service
+ * This file is part of the IoT Management Service
  * Copyright 2019 Canonical Ltd.
  *
  * This program is free software: you can redistribute it and/or modify it
@@ -17,29 +17,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package main
+package factory
 
 import (
-	"github.com/CanonicalLtd/iot-identity/service/factory"
-	"log"
-
+	"fmt"
 	"github.com/CanonicalLtd/iot-identity/config"
-	"github.com/CanonicalLtd/iot-identity/service"
-	"github.com/CanonicalLtd/iot-identity/web"
+	"github.com/CanonicalLtd/iot-identity/datastore"
+	"github.com/CanonicalLtd/iot-identity/datastore/memory"
+	"github.com/CanonicalLtd/iot-identity/datastore/postgres"
 )
 
-func main() {
-	settings := config.ParseArgs()
-
-	// Open the connection to the database
-	db, err := factory.CreateDataStore(settings)
-	if err != nil {
-		log.Fatalf("Error accessing data store: %v", settings.Driver)
+// CreateDataStore is the factory method to create a data store
+func CreateDataStore(settings *config.Settings) (datastore.DataStore, error) {
+	var db datastore.DataStore
+	switch settings.Driver {
+	case "memory":
+		db = memory.NewStore()
+	case "postgres":
+		db = postgres.OpenStore(settings.Driver, settings.DataSource)
+	default:
+		return nil, fmt.Errorf("unknown data store driver: %v", settings.Driver)
 	}
 
-	srv := service.NewIdentityService(settings, db)
-
-	// Start the web service
-	w := web.NewIdentityService(settings, srv)
-	log.Fatal(w.Run())
+	return db, nil
 }

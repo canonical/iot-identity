@@ -21,57 +21,52 @@ package postgres
 
 import (
 	"database/sql"
+	"log"
 
-	"github.com/CanonicalLtd/iot-identity/config"
-	"github.com/CanonicalLtd/iot-identity/datastore"
-	"github.com/CanonicalLtd/iot-identity/domain"
 	_ "github.com/lib/pq" // postgresql driver
 )
 
 // Store implements a PostgreSQL data store
 type Store struct {
-	Settings *config.Settings
+	driver string
 	*sql.DB
 }
 
-// NewStore creates a new memory store
-func NewStore(settings *config.Settings) *Store {
-	return &Store{
-		Settings: settings,
+var pgStore *Store
+
+// OpenStore returns an open database connection
+func OpenStore(driver, dataSource string) *Store {
+	if pgStore != nil {
+		return pgStore
 	}
+
+	// Open the database
+	pgStore = openDatabase(driver, dataSource)
+
+	// Create the tables, if needed
+	pgStore.createTables()
+
+	return pgStore
 }
 
-func (pg *Store) createTables() error {
-	_, err := pg.Exec(createOrganizationTableSQL)
-	return err
+// openDatabase return an open database connection for a PostgreSQL database
+func openDatabase(driver, dataSource string) *Store {
+	// Open the database connection
+	db, err := sql.Open(driver, dataSource)
+	if err != nil {
+		log.Fatalf("Error opening the database: %v\n", err)
+	}
+
+	// Check that we have a valid database connection
+	err = db.Ping()
+	if err != nil {
+		log.Fatalf("Error accessing the database: %v\n", err)
+	}
+
+	return &Store{driver, db}
 }
 
-// OrganizationNew creates a new organization
-func (pg *Store) OrganizationNew(organization datastore.OrganizationNewRequest) (string, error) {
-	panic("implement me")
-}
-
-// OrganizationGet fetches an organization by ID
-func (pg *Store) OrganizationGet(id string) (*domain.Organization, error) {
-	panic("implement me")
-}
-
-// OrganizationGetByName fetches an organization by name
-func (pg *Store) OrganizationGetByName(name string) (*domain.Organization, error) {
-	panic("implement me")
-}
-
-// DeviceNew creates a new device registration
-func (pg *Store) DeviceNew(device datastore.DeviceNewRequest) (string, error) {
-	panic("implement me")
-}
-
-// DeviceGet fetches a device registration
-func (pg *Store) DeviceGet(brand, model, serial string) (*domain.Enrollment, error) {
-	panic("implement me")
-}
-
-// DeviceEnroll enrols a device with the IoT service
-func (pg *Store) DeviceEnroll(device datastore.DeviceEnrollRequest) (*domain.Enrollment, error) {
-	panic("implement me")
+func (db *Store) createTables() {
+	_ = db.createOrganizationTable()
+	_ = db.createDeviceTable()
 }
