@@ -21,7 +21,7 @@ package postgres
 
 const createOrganizationTableSQL string = `
 	CREATE TABLE IF NOT EXISTS organization (
-		id               varchar(200) primary key not null,
+		id               serial primary key not null,
 		org_id           varchar(200) not null unique,
 		name             varchar(200) not null,
 		country_name     varchar(200) default '',

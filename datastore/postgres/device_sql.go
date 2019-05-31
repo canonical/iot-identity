@@ -21,7 +21,7 @@ package postgres
 
 const createDeviceTableSQL string = `
 	CREATE TABLE IF NOT EXISTS device (
-		id                varchar(200) primary key not null,
+		id                serial primary key not null,
 		device_id         varchar(200) not null unique,
 		org_id            varchar(200) not null,
 		brand             varchar(200) not null,
@@ -46,11 +46,11 @@ const createDeviceIDIndexSQL = "CREATE INDEX IF NOT EXISTS device_id_idx ON devi
 const createDeviceBMSIndexSQL = "CREATE INDEX IF NOT EXISTS bms_idx ON device (brand, model, serial_number)"
 
 const createDeviceSQL = `
-insert into device (device_id, org_id, brand, model, serial_number, cred_key, cred_cert, cert_mqtt, cred_port)
+insert into device (device_id, org_id, brand, model, serial_number, cred_key, cred_cert, cred_mqtt, cred_port)
 values ($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING id`
 
 const getDeviceSQL = `
-select device_id, org_id, brand, model, serial_number, cred_key, cred_cert, cert_mqtt, cred_port, store_id, device_key, status
+select device_id, org_id, brand, model, serial_number, cred_key, cred_cert, cred_mqtt, cred_port, store_id, device_key, status
 from device
 where brand=$1 and model=$2 and serial_number=$3`
 
