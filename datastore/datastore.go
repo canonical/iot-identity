@@ -29,6 +29,8 @@ type DataStore interface {
 	OrganizationNew(organization OrganizationNewRequest) (string, error)
 	OrganizationGet(id string) (*domain.Organization, error)
 	OrganizationGetByName(name string) (*domain.Organization, error)
+	OrganizationList() ([]domain.Organization, error)
+
 	DeviceNew(device DeviceNewRequest) (string, error)
 	DeviceGet(brand, model, serial string) (*domain.Enrollment, error)
 	DeviceEnroll(device DeviceEnrollRequest) (*domain.Enrollment, error)

@@ -34,6 +34,7 @@ type Web interface {
 	Router() *mux.Router
 	RegisterOrganization(w http.ResponseWriter, r *http.Request)
 	RegisterDevice(w http.ResponseWriter, r *http.Request)
+	OrganizationList(w http.ResponseWriter, r *http.Request)
 	EnrollDevice(w http.ResponseWriter, r *http.Request)
 }
 

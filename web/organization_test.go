@@ -57,10 +57,39 @@ func TestIdentityService_RegisterOrganization(t *testing.T) {
 			}
 			resp, err := parseRegisterResponse(w.Body)
 			if err != nil {
-				t.Errorf("Web.RegisterDevice() got = %v", err)
+				t.Errorf("Web.RegisterOrganization() got = %v", err)
 			}
 			if resp.Code != tt.result {
-				t.Errorf("Web.RegisterDevice() got = %v, want %v", resp.Code, tt.result)
+				t.Errorf("Web.RegisterOrganization() got = %v, want %v", resp.Code, tt.result)
+			}
+		})
+	}
+}
+
+func TestIdentityService_OrganizationList(t *testing.T) {
+	tests := []struct {
+		name    string
+		withErr bool
+		code    int
+		result  string
+	}{
+		{"valid", false, 200, ""},
+		{"invalid", true, 400, "OrgList"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			wb := NewIdentityService(settings, &mockIdentity{tt.withErr})
+
+			w := sendRequest("GET", "/v1/organizations", nil, wb)
+			if w.Code != tt.code {
+				t.Errorf("Web.OrganizationList() got = %v, want %v", w.Code, tt.code)
+			}
+			resp, err := parseRegisterResponse(w.Body)
+			if err != nil {
+				t.Errorf("Web.OrganizationList() got = %v", err)
+			}
+			if resp.Code != tt.result {
+				t.Errorf("Web.OrganizationList() got = %v, want %v", resp.Code, tt.result)
 			}
 		})
 	}

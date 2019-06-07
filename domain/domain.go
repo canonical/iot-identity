@@ -58,7 +58,7 @@ type Credentials struct {
 type Enrollment struct {
 	ID           string       `json:"id"`
 	Device       Device       `json:"device"`
-	Credentials  Credentials  `json:"credentials"`
+	Credentials  Credentials  `json:"credentials,omitempty"`
 	Organization Organization `json:"organization"`
 	Status       Status       `json:"status"`
 }

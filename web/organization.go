@@ -45,6 +45,17 @@ func (wb IdentityService) RegisterOrganization(w http.ResponseWriter, r *http.Re
 	formatRegisterResponse(id, w)
 }
 
+// OrganizationList fetches organizations
+func (wb IdentityService) OrganizationList(w http.ResponseWriter, r *http.Request) {
+	orgs, err := wb.Identity.OrganizationList()
+	if err != nil {
+		log.Println("Error listing organizations:", err)
+		formatStandardResponse("OrgList", err.Error(), w)
+		return
+	}
+	formatOrganizationsResponse(orgs, w)
+}
+
 func decodeOrganizationRequest(w http.ResponseWriter, r *http.Request) (*service.RegisterOrganizationRequest, error) { // Decode the REST request
 	defer r.Body.Close()
 

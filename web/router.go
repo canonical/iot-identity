@@ -32,8 +32,12 @@ func (wb IdentityService) Router() *mux.Router {
 	// Start the web service router
 	router := mux.NewRouter()
 
+	// Admin
 	router.Handle("/v1/organization", Middleware(http.HandlerFunc(wb.RegisterOrganization))).Methods("POST")
 	router.Handle("/v1/device", Middleware(http.HandlerFunc(wb.RegisterDevice))).Methods("POST")
+	router.Handle("/v1/organizations", Middleware(http.HandlerFunc(wb.OrganizationList))).Methods("GET")
+
+	// Device enrollment
 	router.Handle("/v1/device/enroll", Middleware(http.HandlerFunc(wb.EnrollDevice))).Methods("POST")
 
 	return router

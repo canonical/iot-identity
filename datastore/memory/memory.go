@@ -152,6 +152,11 @@ func (mem *Store) DeviceNew(device datastore.DeviceNewRequest) (string, error) {
 	return deviceID, nil
 }
 
+// OrganizationList lists existing organizations
+func (mem *Store) OrganizationList() ([]domain.Organization, error) {
+	return mem.Orgs, nil
+}
+
 // DeviceGet fetches a device registration
 func (mem *Store) DeviceGet(brand, model, serial string) (*domain.Enrollment, error) { // Check for duplicate
 	for _, en := range mem.Roll {

@@ -211,3 +211,26 @@ func TestStore_OrganizationGetByName(t *testing.T) {
 		})
 	}
 }
+
+func TestStore_OrganizationList(t *testing.T) {
+	tests := []struct {
+		name    string
+		want    int
+		wantErr bool
+	}{
+		{"valid", 1, false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			mem := NewStore()
+			got, err := mem.OrganizationList()
+			if (err != nil) != tt.wantErr {
+				t.Errorf("Store.OrganizationList() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if len(got) != tt.want {
+				t.Errorf("Store.OrganizationList() = %v, want %v", len(got), tt.want)
+			}
+		})
+	}
+}

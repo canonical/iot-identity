@@ -130,7 +130,6 @@ BvV4mMoqS17K7OMHfDohh0DFfp0yFl9oYfLY55G5HA==`
 const ignoreError1 = "the device `canonical/canonical/d75f7300-abbf-4c11-bf0a-8b7103038490` is not registered"
 
 func TestIdentityService_RegisterOrganization(t *testing.T) {
-	settings := config.ParseArgs()
 	settings.RootCertsDir = "../datastore/test_data"
 	db := memory.NewStore()
 	req1 := RegisterOrganizationRequest{

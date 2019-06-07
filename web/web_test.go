@@ -21,6 +21,7 @@ package web
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/CanonicalLtd/iot-identity/datastore/memory"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -29,7 +30,9 @@ import (
 	"github.com/CanonicalLtd/iot-identity/service"
 )
 
-type mockIdentity struct{}
+type mockIdentity struct {
+	withErr bool
+}
 
 func (id *mockIdentity) RegisterOrganization(req *service.RegisterOrganizationRequest) (string, error) {
 	if req.Name == "Exists" {
@@ -43,6 +46,14 @@ func (id *mockIdentity) RegisterDevice(req *service.RegisterDeviceRequest) (stri
 		return "", fmt.Errorf("MOCK register error")
 	}
 	return "def", nil
+}
+
+func (id *mockIdentity) OrganizationList() ([]domain.Organization, error) {
+	if id.withErr {
+		return nil, fmt.Errorf("MOCK error list")
+	}
+	db := memory.NewStore()
+	return db.OrganizationList()
 }
 
 func (id *mockIdentity) EnrollDevice(req *service.EnrollDeviceRequest) (*domain.Enrollment, error) {

@@ -43,6 +43,29 @@ func (db *Store) OrganizationNew(org datastore.OrganizationNewRequest) (string, 
 	return orgID, err
 }
 
+// OrganizationList fetches existing organizations
+func (db *Store) OrganizationList() ([]domain.Organization, error) {
+	var id int64
+	rows, err := db.Query(listOrganizationSQL)
+	if err != nil {
+		log.Printf("Error retrieving organizations: %v\n", err)
+		return nil, err
+	}
+	defer rows.Close()
+
+	items := []domain.Organization{}
+	for rows.Next() {
+		item := domain.Organization{}
+		err := rows.Scan(&id, &item.ID, &item.Name, &item.RootCert)
+		if err != nil {
+			return nil, err
+		}
+		items = append(items, item)
+	}
+
+	return items, nil
+}
+
 // OrganizationGet fetches an organization by ID
 func (db *Store) OrganizationGet(orgID string) (*domain.Organization, error) {
 	var id int64

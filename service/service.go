@@ -34,6 +34,8 @@ import (
 type Identity interface {
 	RegisterOrganization(req *RegisterOrganizationRequest) (string, error)
 	RegisterDevice(req *RegisterDeviceRequest) (string, error)
+	OrganizationList() ([]domain.Organization, error)
+
 	EnrollDevice(req *EnrollDeviceRequest) (*domain.Enrollment, error)
 }
 
@@ -49,37 +51,6 @@ func NewIdentityService(settings *config.Settings, db datastore.DataStore) *Iden
 		Settings: settings,
 		DB:       db,
 	}
-}
-
-// RegisterOrganization registers a new organization with the service
-func (id IdentityService) RegisterOrganization(req *RegisterOrganizationRequest) (string, error) {
-	// Validate fields
-	if err := validateNotEmpty("organization name", req.Name); err != nil {
-		return "", err
-	}
-
-	// Check that the organization isn't registered i.e. no error with the 'get'
-	if _, err := id.DB.OrganizationGetByName(req.Name); err == nil {
-		return "", fmt.Errorf("the organization '%s' has already been registered", req.Name)
-	}
-
-	// Create server certificate for the organization
-	serverPEM, serverCA, err := cert.CreateOrganizationCert(id.Settings.RootCertsDir, req.Name)
-	if err != nil {
-		return "", err
-	}
-
-	// Create registration
-	o := datastore.OrganizationNewRequest{
-		Name:        req.Name,
-		CountryName: req.CountryName,
-		ServerKey:   serverPEM,
-		ServerCert:  serverCA,
-	}
-	log.Println("---", o)
-
-	// Register the organization
-	return id.DB.OrganizationNew(o)
 }
 
 // RegisterDevice registers a new device with the service

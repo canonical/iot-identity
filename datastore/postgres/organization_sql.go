@@ -35,6 +35,10 @@ const createOrganizationSQL = `
 insert into organization (org_id, name, country_name, root_cert, root_key)
 values ($1,$2,$3,$4,$5) RETURNING id`
 
+const listOrganizationSQL = `
+select id, org_id, name, root_cert
+from organization`
+
 const getOrganizationSQL = `
 select id, org_id, name, country_name, root_cert, root_key
 from organization
