@@ -59,3 +59,8 @@ update device
 set store_id=$4, device_key=$5, status=$6
 where brand=$1 and model=$2 and serial_number=$3
 `
+
+const listDeviceSQL = `
+select device_id, org_id, brand, model, serial_number, cred_cert, cred_mqtt, cred_port, store_id, device_key, status
+from device
+where org_id=$1`

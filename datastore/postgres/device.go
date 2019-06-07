@@ -91,3 +91,27 @@ func (db *Store) DeviceEnroll(d datastore.DeviceEnrollRequest) (*domain.Enrollme
 
 	return db.DeviceGet(d.Brand, d.Model, d.SerialNumber)
 }
+
+// DeviceList fetches the device registrations for an organization
+func (db *Store) DeviceList(orgID string) ([]domain.Enrollment, error) {
+	rows, err := db.Query(listDeviceSQL, orgID)
+	if err != nil {
+		log.Printf("Error retrieving devices: %v\n", err)
+		return nil, err
+	}
+	defer rows.Close()
+
+	devices := []domain.Enrollment{}
+	for rows.Next() {
+		d := domain.Enrollment{}
+		err := rows.Scan(&d.ID, &d.Organization.ID, &d.Device.Brand, &d.Device.Model, &d.Device.SerialNumber,
+			&d.Credentials.Certificate, &d.Credentials.MQTTURL, &d.Credentials.MQTTPort,
+			&d.Device.StoreID, &d.Device.DeviceKey, &d.Status)
+		if err != nil {
+			return nil, err
+		}
+		devices = append(devices, d)
+	}
+
+	return devices, nil
+}

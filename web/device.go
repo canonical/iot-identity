@@ -22,6 +22,7 @@ package web
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/gorilla/mux"
 	"io"
 	"log"
 	"net/http"
@@ -29,6 +30,19 @@ import (
 	"github.com/CanonicalLtd/iot-identity/service"
 	"github.com/snapcore/snapd/asserts"
 )
+
+// DeviceList fetches device registrations
+func (wb IdentityService) DeviceList(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+
+	devices, err := wb.Identity.DeviceList(vars["orgid"])
+	if err != nil {
+		log.Println("Error fetching devices:", err)
+		formatStandardResponse("DeviceList", err.Error(), w)
+		return
+	}
+	formatDevicesResponse(devices, w)
+}
 
 // RegisterDevice registers a new device with the identity service
 func (wb IdentityService) RegisterDevice(w http.ResponseWriter, r *http.Request) {

@@ -181,3 +181,14 @@ func (mem *Store) DeviceEnroll(device datastore.DeviceEnrollRequest) (*domain.En
 	reg.Status = domain.StatusEnrolled
 	return reg, nil
 }
+
+// DeviceList fetches the devices for an organization
+func (mem *Store) DeviceList(orgID string) ([]domain.Enrollment, error) {
+	devices := []domain.Enrollment{}
+	for _, en := range mem.Roll {
+		if en.Organization.ID == orgID {
+			devices = append(devices, en)
+		}
+	}
+	return devices, nil
+}

@@ -164,3 +164,33 @@ func TestIdentityService_EnrollDevice(t *testing.T) {
 		})
 	}
 }
+
+func TestIdentityService_DeviceList(t *testing.T) {
+	tests := []struct {
+		name    string
+		url     string
+		withErr bool
+		code    int
+		result  string
+	}{
+		{"valid", "/v1/devices/abc", false, 200, ""},
+		{"invalid", "/v1/devices/invalid", true, 400, "DeviceList"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			wb := NewIdentityService(settings, &mockIdentity{tt.withErr})
+
+			w := sendRequest("GET", tt.url, nil, wb)
+			if w.Code != tt.code {
+				t.Errorf("Web.DeviceList() got = %v, want %v", w.Code, tt.code)
+			}
+			resp, err := parseRegisterResponse(w.Body)
+			if err != nil {
+				t.Errorf("Web.DeviceList() got = %v", err)
+			}
+			if resp.Code != tt.result {
+				t.Errorf("Web.DeviceList() got = %v, want %v", resp.Code, tt.result)
+			}
+		})
+	}
+}

@@ -39,7 +39,13 @@ type StandardResponse struct {
 // OrganizationsResponse is the JSON response from a organization list API method
 type OrganizationsResponse struct {
 	StandardResponse
-	Organizations []domain.Organization `json:"organization"`
+	Organizations []domain.Organization `json:"organizations"`
+}
+
+// DevicesResponse is the JSON response from a device list API method
+type DevicesResponse struct {
+	StandardResponse
+	Devices []domain.Enrollment `json:"devices"`
 }
 
 // RegisterResponse is the JSON response from a registration API method
@@ -71,6 +77,15 @@ func formatStandardResponse(code, message string, w http.ResponseWriter) {
 func formatOrganizationsResponse(orgs []domain.Organization, w http.ResponseWriter) {
 	w.Header().Set("Content-Type", JSONHeader)
 	response := OrganizationsResponse{StandardResponse{}, orgs}
+
+	// Encode the response as JSON
+	encodeResponse(w, response)
+}
+
+// formatDevicesResponse returns a JSON response from an organizations API method
+func formatDevicesResponse(items []domain.Enrollment, w http.ResponseWriter) {
+	w.Header().Set("Content-Type", JSONHeader)
+	response := DevicesResponse{StandardResponse{}, items}
 
 	// Encode the response as JSON
 	encodeResponse(w, response)

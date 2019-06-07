@@ -26,7 +26,6 @@ import (
 	"github.com/CanonicalLtd/iot-identity/config"
 	"github.com/CanonicalLtd/iot-identity/datastore"
 	"github.com/CanonicalLtd/iot-identity/domain"
-	"github.com/CanonicalLtd/iot-identity/service/cert"
 	"github.com/snapcore/snapd/asserts"
 )
 
@@ -35,6 +34,7 @@ type Identity interface {
 	RegisterOrganization(req *RegisterOrganizationRequest) (string, error)
 	RegisterDevice(req *RegisterDeviceRequest) (string, error)
 	OrganizationList() ([]domain.Organization, error)
+	DeviceList(orgID string) ([]domain.Enrollment, error)
 
 	EnrollDevice(req *EnrollDeviceRequest) (*domain.Enrollment, error)
 }
@@ -51,55 +51,6 @@ func NewIdentityService(settings *config.Settings, db datastore.DataStore) *Iden
 		Settings: settings,
 		DB:       db,
 	}
-}
-
-// RegisterDevice registers a new device with the service
-func (id IdentityService) RegisterDevice(req *RegisterDeviceRequest) (string, error) {
-	// Validate fields
-	for k, v := range map[string]string{
-		"organization ID": req.OrganizationID,
-		"brand":           req.Brand,
-		"model name":      req.Model,
-		"serial number":   req.SerialNumber,
-	} {
-		if err := validateNotEmpty(k, v); err != nil {
-			return "", err
-		}
-	}
-
-	// Check that the organization exists
-	org, err := id.DB.OrganizationGet(req.OrganizationID)
-	if err != nil {
-		return "", err
-	}
-
-	// Check that the device has not been registered
-	if _, err := id.DB.DeviceGet(req.Brand, req.Model, req.SerialNumber); err == nil {
-		return "", fmt.Errorf("the device `%s/%s/%s` is already registered", req.Brand, req.Model, req.SerialNumber)
-	}
-
-	// Create a signed certificate
-	deviceID := datastore.GenerateID()
-	keyPEM, certPEM, err := cert.CreateClientCert(org, id.Settings.RootCertsDir, deviceID)
-	if err != nil {
-		return "", err
-	}
-
-	// Create registration
-	d := datastore.DeviceNewRequest{
-		ID:             deviceID,
-		OrganizationID: req.OrganizationID,
-		Brand:          req.Brand,
-		Model:          req.Model,
-		SerialNumber:   req.SerialNumber,
-		Credentials: domain.Credentials{
-			PrivateKey:  keyPEM,
-			Certificate: certPEM,
-			MQTTURL:     id.Settings.MQTTUrl, // Using a default URL for all devices
-			MQTTPort:    id.Settings.MQTTPort,
-		},
-	}
-	return id.DB.DeviceNew(d)
 }
 
 // EnrollDevice connects an IoT device with the service

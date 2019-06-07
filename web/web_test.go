@@ -34,6 +34,7 @@ type mockIdentity struct {
 	withErr bool
 }
 
+// RegisterOrganization mocks organization registration
 func (id *mockIdentity) RegisterOrganization(req *service.RegisterOrganizationRequest) (string, error) {
 	if req.Name == "Exists" {
 		return "", fmt.Errorf("MOCK register error")
@@ -41,6 +42,7 @@ func (id *mockIdentity) RegisterOrganization(req *service.RegisterOrganizationRe
 	return "abc", nil
 }
 
+// RegisterDevice mocks device registration
 func (id *mockIdentity) RegisterDevice(req *service.RegisterDeviceRequest) (string, error) {
 	if req.Brand == "exists" {
 		return "", fmt.Errorf("MOCK register error")
@@ -48,6 +50,7 @@ func (id *mockIdentity) RegisterDevice(req *service.RegisterDeviceRequest) (stri
 	return "def", nil
 }
 
+// OrganizationList mocks fetching organizations
 func (id *mockIdentity) OrganizationList() ([]domain.Organization, error) {
 	if id.withErr {
 		return nil, fmt.Errorf("MOCK error list")
@@ -56,6 +59,16 @@ func (id *mockIdentity) OrganizationList() ([]domain.Organization, error) {
 	return db.OrganizationList()
 }
 
+// DeviceList mocks fetching devices
+func (id *mockIdentity) DeviceList(orgID string) ([]domain.Enrollment, error) {
+	if id.withErr || orgID == "invalid" {
+		return nil, fmt.Errorf("MOCK error list")
+	}
+	db := memory.NewStore()
+	return db.DeviceList(orgID)
+}
+
+// EnrollDevice mocks enrolling a device
 func (id *mockIdentity) EnrollDevice(req *service.EnrollDeviceRequest) (*domain.Enrollment, error) {
 	return &domain.Enrollment{}, nil
 }

@@ -4,3 +4,4 @@ vendor/*/
 .secret
 .coverage/
 certs/
+run

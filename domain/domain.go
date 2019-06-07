@@ -34,7 +34,7 @@ type Organization struct {
 	ID       string `json:"id"`
 	Name     string `json:"name"`
 	RootCert []byte `json:"rootcert"`
-	RootKey  []byte `json:"-"`
+	RootKey  []byte `json:"-,omitempty"`
 }
 
 // Device details
@@ -42,13 +42,13 @@ type Device struct {
 	Brand        string `json:"brand"`
 	Model        string `json:"model"`
 	SerialNumber string `json:"serial"`
-	StoreID      string `json:"store"`
-	DeviceKey    string `json:"deviceKey"`
+	StoreID      string `json:"store,omitempty"`
+	DeviceKey    string `json:"deviceKey,omitempty"`
 }
 
 // Credentials for accessing the MQTT broker
 type Credentials struct {
-	PrivateKey  []byte `json:"privateKey"`
+	PrivateKey  []byte `json:"privateKey,omitempty"`
 	Certificate []byte `json:"certificate"`
 	MQTTURL     string `json:"mqttUrl"`
 	MQTTPort    string `json:"mqttPort"`
