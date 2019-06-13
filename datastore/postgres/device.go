@@ -82,9 +82,37 @@ func (db *Store) DeviceGet(brand, model, serial string) (*domain.Enrollment, err
 	return &d, err
 }
 
+// DeviceGetByID fetches a device registration
+func (db *Store) DeviceGetByID(deviceID string) (*domain.Enrollment, error) {
+	d := domain.Enrollment{
+		Device:       domain.Device{},
+		Organization: domain.Organization{},
+		Credentials:  domain.Credentials{},
+	}
+
+	err := db.QueryRow(getDeviceByIDSQL, deviceID).Scan(
+		&d.ID, &d.Organization.ID, &d.Device.Brand, &d.Device.Model, &d.Device.SerialNumber,
+		&d.Credentials.PrivateKey, &d.Credentials.Certificate, &d.Credentials.MQTTURL, &d.Credentials.MQTTPort,
+		&d.Device.StoreID, &d.Device.DeviceKey, &d.Status)
+	if err != nil {
+		log.Printf("Error retrieving device: %v\n", err)
+		return &d, fmt.Errorf("error retrieving device: %v", err)
+	}
+
+	// Get the organization details for the device
+	org, err := db.OrganizationGet(d.Organization.ID)
+	if err != nil {
+		log.Printf("Error retrieving device organization: %v\n", err)
+		return &d, fmt.Errorf("error retrieving device organization: %v", err)
+	}
+	d.Organization = *org
+
+	return &d, err
+}
+
 // DeviceEnroll enrolls a device with the IoT service
 func (db *Store) DeviceEnroll(d datastore.DeviceEnrollRequest) (*domain.Enrollment, error) {
-	_, err := db.Exec(updateDeviceSQL, d.Brand, d.Model, d.SerialNumber, d.StoreID, d.DeviceKey, domain.StatusEnrolled)
+	_, err := db.Exec(enrollDeviceSQL, d.Brand, d.Model, d.SerialNumber, d.StoreID, d.DeviceKey, domain.StatusEnrolled)
 	if err != nil {
 		log.Printf("Error updating the device: %v\n", err)
 	}
@@ -114,4 +142,14 @@ func (db *Store) DeviceList(orgID string) ([]domain.Enrollment, error) {
 	}
 
 	return devices, nil
+}
+
+// DeviceUpdate updates a device registration
+func (db *Store) DeviceUpdate(deviceID string, status domain.Status) error {
+	_, err := db.Exec(updateDeviceSQL, deviceID, status)
+	if err != nil {
+		log.Printf("Error updating the device: %v\n", err)
+	}
+
+	return err
 }

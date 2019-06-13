@@ -194,3 +194,69 @@ func TestIdentityService_DeviceList(t *testing.T) {
 		})
 	}
 }
+
+func TestIdentityService_DeviceGet(t *testing.T) {
+	tests := []struct {
+		name    string
+		url     string
+		withErr bool
+		code    int
+		result  string
+	}{
+		{"valid", "/v1/devices/abc/a111", false, 200, ""},
+		{"invalid", "/v1/devices/abc/invalid", true, 400, "DeviceGet"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			wb := NewIdentityService(settings, &mockIdentity{tt.withErr})
+
+			w := sendRequest("GET", tt.url, nil, wb)
+			if w.Code != tt.code {
+				t.Errorf("Web.DeviceGet() got = %v, want %v", w.Code, tt.code)
+			}
+			resp, err := parseRegisterResponse(w.Body)
+			if err != nil {
+				t.Errorf("Web.DeviceGet() got = %v", err)
+			}
+			if resp.Code != tt.result {
+				t.Errorf("Web.DeviceGet() got = %v, want %v", resp.Code, tt.result)
+			}
+		})
+	}
+}
+
+func TestIdentityService_DeviceUpdate(t *testing.T) {
+	req1 := []byte(`{"status":3}`)
+	req2 := []byte(``)
+	req3 := []byte(`\u000`)
+	tests := []struct {
+		name    string
+		url     string
+		body    []byte
+		withErr bool
+		code    int
+		result  string
+	}{
+		{"valid", "/v1/devices/abc/a111", req1, false, 200, ""},
+		{"invalid", "/v1/devices/abc/invalid", req1, true, 400, "DeviceUpdate"},
+		{"invalid-empty", "/v1/devices/abc/a111", req2, true, 400, "NoData"},
+		{"invalid-body", "/v1/devices/abc/a111", req3, true, 400, "BadData"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			wb := NewIdentityService(settings, &mockIdentity{tt.withErr})
+
+			w := sendRequest("PUT", tt.url, bytes.NewReader(tt.body), wb)
+			if w.Code != tt.code {
+				t.Errorf("Web.DeviceUpdate() got = %v, want %v", w.Code, tt.code)
+			}
+			resp, err := parseRegisterResponse(w.Body)
+			if err != nil {
+				t.Errorf("Web.DeviceUpdate() got = %v", err)
+			}
+			if resp.Code != tt.result {
+				t.Errorf("Web.DeviceUpdate() got = %v, want %v", resp.Code, tt.result)
+			}
+		})
+	}
+}

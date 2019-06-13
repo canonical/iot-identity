@@ -31,6 +31,11 @@ func (id IdentityService) DeviceList(orgID string) ([]domain.Enrollment, error) 
 	return id.DB.DeviceList(orgID)
 }
 
+// DeviceGet fetches a device registration
+func (id IdentityService) DeviceGet(orgID, deviceID string) (*domain.Enrollment, error) {
+	return id.DB.DeviceGetByID(deviceID)
+}
+
 // RegisterDevice registers a new device with the service
 func (id IdentityService) RegisterDevice(req *RegisterDeviceRequest) (string, error) {
 	// Validate fields
@@ -78,4 +83,49 @@ func (id IdentityService) RegisterDevice(req *RegisterDeviceRequest) (string, er
 		},
 	}
 	return id.DB.DeviceNew(d)
+}
+
+// DeviceUpdate updates an existing device with the service
+// Status changes are limited, depending on whether the device has enrolled with the service. If it has, then it
+// already has credentials.
+// If a device has not enrolled:
+// - Waiting => Disabled
+// - Disabled => Waiting
+// If a device has enrolled:
+// - Enrolled => Disabled (TODO: needs to trigger the removal of credentials from MQTT broker or device or both)
+// - Enrolled => Waiting
+func (id IdentityService) DeviceUpdate(orgID, deviceID string, req *DeviceUpdateRequest) error {
+	// Get the device and check the current status
+	device, err := id.DB.DeviceGetByID(deviceID)
+	if err != nil {
+		return err
+	}
+
+	if req.Status == int(domain.StatusEnrolled) {
+		return fmt.Errorf("cannot change a device status to enrolled. The device itself needs to connect for this")
+	}
+
+	switch device.Status {
+	case domain.StatusWaiting:
+		if req.Status == int(domain.StatusWaiting) {
+			// No change required
+			return nil
+		}
+		device.Status = domain.StatusDisabled
+	case domain.StatusDisabled:
+		if req.Status == int(domain.StatusDisabled) {
+			// No change required
+			return nil
+		}
+		device.Status = domain.StatusWaiting
+	case domain.StatusEnrolled:
+		if req.Status == int(domain.StatusDisabled) {
+			// TODO: trigger the removal of credentials from MQTT broker or device or both
+			device.Status = domain.StatusDisabled
+		} else {
+			device.Status = domain.StatusWaiting
+		}
+	}
+
+	return id.DB.DeviceUpdate(device.ID, device.Status)
 }

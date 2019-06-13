@@ -54,10 +54,21 @@ select device_id, org_id, brand, model, serial_number, cred_key, cred_cert, cred
 from device
 where brand=$1 and model=$2 and serial_number=$3`
 
-const updateDeviceSQL = `
+const getDeviceByIDSQL = `
+select device_id, org_id, brand, model, serial_number, cred_key, cred_cert, cred_mqtt, cred_port, store_id, device_key, status
+from device
+where device_id=$1`
+
+const enrollDeviceSQL = `
 update device
 set store_id=$4, device_key=$5, status=$6
 where brand=$1 and model=$2 and serial_number=$3
+`
+
+const updateDeviceSQL = `
+update device
+set status=$2
+where device_id=$1
 `
 
 const listDeviceSQL = `

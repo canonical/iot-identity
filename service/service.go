@@ -35,6 +35,8 @@ type Identity interface {
 	RegisterDevice(req *RegisterDeviceRequest) (string, error)
 	OrganizationList() ([]domain.Organization, error)
 	DeviceList(orgID string) ([]domain.Enrollment, error)
+	DeviceGet(orgID, deviceID string) (*domain.Enrollment, error)
+	DeviceUpdate(orgID, deviceID string, req *DeviceUpdateRequest) error
 
 	EnrollDevice(req *EnrollDeviceRequest) (*domain.Enrollment, error)
 }

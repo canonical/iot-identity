@@ -40,3 +40,8 @@ type EnrollDeviceRequest struct {
 	Model  asserts.Assertion
 	Serial asserts.Assertion
 }
+
+// DeviceUpdateRequest holds request to update a device registration
+type DeviceUpdateRequest struct {
+	Status int `json:"status"`
+}

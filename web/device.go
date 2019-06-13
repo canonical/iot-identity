@@ -44,6 +44,37 @@ func (wb IdentityService) DeviceList(w http.ResponseWriter, r *http.Request) {
 	formatDevicesResponse(devices, w)
 }
 
+// DeviceGet fetches a device registration
+func (wb IdentityService) DeviceGet(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+
+	en, err := wb.Identity.DeviceGet(vars["orgid"], vars["device"])
+	if err != nil {
+		log.Printf("Error fetching device `%s`: %v\n", vars["device"], err)
+		formatStandardResponse("DeviceGet", err.Error(), w)
+		return
+	}
+	formatEnrollResponse(*en, w)
+}
+
+// DeviceUpdate updates a device registration
+func (wb IdentityService) DeviceUpdate(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+
+	req, err := decodeDeviceUpdateRequest(w, r)
+	if err != nil {
+		return
+	}
+
+	err = wb.Identity.DeviceUpdate(vars["orgid"], vars["device"], req)
+	if err != nil {
+		log.Printf("Error updating device `%s`: %v\n", vars["device"], err)
+		formatStandardResponse("DeviceUpdate", err.Error(), w)
+		return
+	}
+	formatStandardResponse("", "", w)
+}
+
 // RegisterDevice registers a new device with the identity service
 func (wb IdentityService) RegisterDevice(w http.ResponseWriter, r *http.Request) {
 	// Decode the JSON body
@@ -143,4 +174,23 @@ func decodeEnrollRequest(r *http.Request) (asserts.Assertion, asserts.Assertion,
 	}
 
 	return assertion1, assertion2, nil
+}
+
+func decodeDeviceUpdateRequest(w http.ResponseWriter, r *http.Request) (*service.DeviceUpdateRequest, error) {
+	defer r.Body.Close()
+
+	// Decode the JSON body
+	dev := service.DeviceUpdateRequest{}
+	err := json.NewDecoder(r.Body).Decode(&dev)
+	switch {
+	// Check we have some data
+	case err == io.EOF:
+		formatStandardResponse("NoData", "No data supplied.", w)
+		log.Println("No data supplied.")
+		// Check for parsing errors
+	case err != nil:
+		formatStandardResponse("BadData", err.Error(), w)
+		log.Println(err)
+	}
+	return &dev, err
 }

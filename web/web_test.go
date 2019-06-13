@@ -68,6 +68,34 @@ func (id *mockIdentity) DeviceList(orgID string) ([]domain.Enrollment, error) {
 	return db.DeviceList(orgID)
 }
 
+// DeviceGet mocks fetching a device
+func (id *mockIdentity) DeviceGet(orgID, deviceID string) (*domain.Enrollment, error) {
+	if id.withErr || deviceID == "invalid" {
+		return nil, fmt.Errorf("MOCK error get")
+	}
+	db := memory.NewStore()
+	return db.DeviceGetByID(deviceID)
+}
+
+// DeviceUpdate mocks update a device
+func (id *mockIdentity) DeviceUpdate(orgID, deviceID string, req *service.DeviceUpdateRequest) error {
+	if id.withErr || deviceID == "invalid" {
+		return fmt.Errorf("MOCK error update")
+	}
+	db := memory.NewStore()
+	var status domain.Status
+	switch req.Status {
+	case 2:
+		status = domain.StatusEnrolled
+	case 3:
+		status = domain.StatusDisabled
+	default:
+		status = domain.StatusWaiting
+	}
+
+	return db.DeviceUpdate(deviceID, status)
+}
+
 // EnrollDevice mocks enrolling a device
 func (id *mockIdentity) EnrollDevice(req *service.EnrollDeviceRequest) (*domain.Enrollment, error) {
 	return &domain.Enrollment{}, nil

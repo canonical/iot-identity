@@ -33,8 +33,10 @@ type DataStore interface {
 
 	DeviceNew(device DeviceNewRequest) (string, error)
 	DeviceGet(brand, model, serial string) (*domain.Enrollment, error)
+	DeviceGetByID(deviceID string) (*domain.Enrollment, error)
 	DeviceEnroll(device DeviceEnrollRequest) (*domain.Enrollment, error)
 	DeviceList(orgID string) ([]domain.Enrollment, error)
+	DeviceUpdate(deviceID string, status domain.Status) error
 }
 
 // OrganizationNewRequest is the request to create a new organization

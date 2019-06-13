@@ -233,9 +233,9 @@ func TestIdentityService_Enroll(t *testing.T) {
 	settings := &config.Settings{RootCertsDir: "../datastore/test_data"}
 	db := memory.NewStore()
 	req1 := datastore.DeviceEnrollRequest{
-		Brand:        "example",
-		Model:        "drone-1000",
-		SerialNumber: "DR1000A111",
+		Brand:        "canonical",
+		Model:        "ubuntu-core-18-amd64",
+		SerialNumber: "d75f7300-abbf-4c11-bf0a-8b7103038490",
 		StoreID:      "example-store",
 		DeviceKey:    "AAAAAAAA",
 	}

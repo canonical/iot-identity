@@ -20,9 +20,10 @@
 package service
 
 import (
+	"testing"
+
 	"github.com/CanonicalLtd/iot-identity/config"
 	"github.com/CanonicalLtd/iot-identity/datastore/memory"
-	"testing"
 )
 
 func TestIdentityService_DeviceList(t *testing.T) {
@@ -50,6 +51,68 @@ func TestIdentityService_DeviceList(t *testing.T) {
 			}
 			if len(got) != tt.want {
 				t.Errorf("IdentityService.DeviceList() = %v, want %v", len(got), tt.want)
+			}
+		})
+	}
+}
+
+func TestIdentityService_DeviceGet(t *testing.T) {
+	settings := &config.Settings{RootCertsDir: "../datastore/test_data"}
+	db := memory.NewStore()
+	type args struct {
+		orgID    string
+		deviceID string
+	}
+	tests := []struct {
+		name    string
+		args    args
+		wantErr bool
+	}{
+		{"valid", args{"abc", "a111"}, false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			id := NewIdentityService(settings, db)
+			got, err := id.DeviceGet(tt.args.orgID, tt.args.deviceID)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("IdentityService.DeviceGet() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if got.ID != tt.args.deviceID {
+				t.Errorf("IdentityService.DeviceGet() = %v, want %v", got.ID, tt.args.deviceID)
+			}
+		})
+	}
+}
+
+func TestIdentityService_DeviceUpdate(t *testing.T) {
+	settings := &config.Settings{RootCertsDir: "../datastore/test_data"}
+	type args struct {
+		orgID    string
+		deviceID string
+		req      *DeviceUpdateRequest
+	}
+	tests := []struct {
+		name    string
+		args    args
+		wantErr bool
+	}{
+		{"valid", args{"abc", "a111", &DeviceUpdateRequest{Status: 3}}, false},
+		{"invalid-device", args{"abc", "invalid", &DeviceUpdateRequest{Status: 3}}, true},
+		{"invalid-enrolled", args{"abc", "a111", &DeviceUpdateRequest{Status: 2}}, true},
+		{"valid-waiting-disabled", args{"abc", "c333", &DeviceUpdateRequest{Status: 3}}, false},
+		{"valid-waiting-unchanged", args{"abc", "c333", &DeviceUpdateRequest{Status: 1}}, false},
+		{"valid-enrolled-disabled", args{"abc", "b222", &DeviceUpdateRequest{Status: 3}}, false},
+		{"valid-enrolled-waiting", args{"abc", "b222", &DeviceUpdateRequest{Status: 1}}, false},
+		{"valid-disabled-unchanged", args{"abc", "a111", &DeviceUpdateRequest{Status: 3}}, false},
+		{"valid-disabled-waiting", args{"abc", "a111", &DeviceUpdateRequest{Status: 1}}, false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			db := memory.NewStore()
+			id := NewIdentityService(settings, db)
+			if err := id.DeviceUpdate(tt.args.orgID, tt.args.deviceID, tt.args.req); (err != nil) != tt.wantErr {
+				t.Errorf("IdentityService.DeviceUpdate() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
 	}

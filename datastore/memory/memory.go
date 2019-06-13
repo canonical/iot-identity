@@ -45,7 +45,7 @@ func NewStore() *Store {
 				ID:           "a111",
 				Organization: exOrg,
 				Device:       dev1,
-				Status:       domain.StatusWaiting,
+				Status:       domain.StatusDisabled,
 			},
 			{
 				ID:           "b222",
@@ -191,4 +191,33 @@ func (mem *Store) DeviceList(orgID string) ([]domain.Enrollment, error) {
 		}
 	}
 	return devices, nil
+}
+
+// DeviceGetByID fetches a device by its ID
+func (mem *Store) DeviceGetByID(deviceID string) (*domain.Enrollment, error) {
+	for _, en := range mem.Roll {
+		if en.ID == deviceID {
+			return &en, nil
+		}
+	}
+	return nil, fmt.Errorf("the device `%s` is not registered", deviceID)
+}
+
+// DeviceUpdate update a device for selected fields
+func (mem *Store) DeviceUpdate(deviceID string, status domain.Status) error {
+	found := false
+	roll := []domain.Enrollment{}
+
+	for _, en := range mem.Roll {
+		if en.ID == deviceID {
+			found = true
+			en.Status = status
+		}
+		roll = append(roll, en)
+	}
+	if !found {
+		return fmt.Errorf("the device `%s` is not registered", deviceID)
+	}
+	mem.Roll = roll
+	return nil
 }
