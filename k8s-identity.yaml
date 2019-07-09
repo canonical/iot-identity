@@ -5,8 +5,7 @@ metadata:
 data:
   # base64 encoded X509 certificate files
   ca.crt: LS0tLS1CRUdJTi...WEZuaFUzCmJ3bmZwYzRKNWNHdzg3c3AxSzY3R2Q3VHpFTUJPdXp5alE9PQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
-  server.crt: LS0tLS1CRUdJTi...bUhVPQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
-  server.key: LS0tLS1CRUdJTi...FLM3hNbklkWTRuaUtzbFoKLS0tLS1FTkQgUlNBIFBSSVZBVEUgS0VZLS0tLS0K
+  ca.key: LS0tLS1CRUdJTi...FLM3hNbklkWTRuaUtzbFoKLS0tLS1FTkQgUlNBIFBSSVZBVEUgS0VZLS0tLS0K
 ---
 kind: PersistentVolume
 apiVersion: v1
