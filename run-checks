@@ -121,7 +121,7 @@ if [ "$STATIC" = 1 ]; then
         if [ "$file" = "vendor" ] || [ "$file" = "static" ] || [ "$file" = "webapp-admin" ] || [ "$file" = "webapp-user" ] || [ "$file" = "test" ]; then
             continue
         fi
-        misspell -error -i auther,PROCES,PROCESSS,proces,processs,exportfs "$file"
+        misspell -error -i auther,PROCES,PROCESSS,proces,processs,exportfs,mosquitto "$file"
     done
 
     echo Checking for ineffective assignments

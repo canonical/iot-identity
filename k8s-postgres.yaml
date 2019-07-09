@@ -8,6 +8,7 @@ data:
   POSTGRES_DB: identity
   POSTGRES_USER: manager
   POSTGRES_PASSWORD: 6Yu3zqLmkR45
+  DATASOURCE: "dbname=identity host=postgres-identity user=manager password=6Yu3zqLmkR45 sslmode=disable"
 ---
 kind: PersistentVolume
 apiVersion: v1
