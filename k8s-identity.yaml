@@ -74,7 +74,7 @@ spec:
                   name: postgres-config-identity
                   key: DATASOURCE
             - name: MQTTURL
-              value: "mosquitto"
+              value: "mqtt"
             - name: MQTTPORT
               value: "8883"
             - name: CERTSDIR
