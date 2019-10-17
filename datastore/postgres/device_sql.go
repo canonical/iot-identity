@@ -35,6 +35,7 @@ const createDeviceTableSQL string = `
 		store_id          varchar(200) default '',
 		device_key        text default '',
 		status            int default 1,
+        device_data       text default '',
 
         UNIQUE (device_id),
         UNIQUE (brand, model, serial_number)
@@ -46,11 +47,11 @@ const createDeviceIDIndexSQL = "CREATE INDEX IF NOT EXISTS device_id_idx ON devi
 const createDeviceBMSIndexSQL = "CREATE INDEX IF NOT EXISTS bms_idx ON device (brand, model, serial_number)"
 
 const createDeviceSQL = `
-insert into device (device_id, org_id, brand, model, serial_number, cred_key, cred_cert, cred_mqtt, cred_port)
-values ($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING id`
+insert into device (device_id, org_id, brand, model, serial_number, cred_key, cred_cert, cred_mqtt, cred_port, device_data)
+values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING id`
 
 const getDeviceSQL = `
-select device_id, org_id, brand, model, serial_number, cred_key, cred_cert, cred_mqtt, cred_port, store_id, device_key, status
+select device_id, org_id, brand, model, serial_number, cred_key, cred_cert, cred_mqtt, cred_port, store_id, device_key, status, device_data
 from device
 where brand=$1 and model=$2 and serial_number=$3`
 
@@ -61,17 +62,20 @@ where device_id=$1`
 
 const enrollDeviceSQL = `
 update device
-set store_id=$4, device_key=$5, status=$6
+set store_id=$4, device_key=$5, status=$6, device_data=$7
 where brand=$1 and model=$2 and serial_number=$3
 `
 
 const updateDeviceSQL = `
 update device
-set status=$2
+set status=$2, device_data=$3
 where device_id=$1
 `
 
 const listDeviceSQL = `
-select device_id, org_id, brand, model, serial_number, cred_cert, cred_mqtt, cred_port, store_id, device_key, status
+select device_id, org_id, brand, model, serial_number, cred_cert, cred_mqtt, cred_port, store_id, device_key, status, device_data
 from device
 where org_id=$1`
+
+// Add the device_data field to store a base64-encoded file
+const alterDeviceAddDeviceData = "ALTER TABLE device ADD COLUMN device_data TEXT DEFAULT ''"

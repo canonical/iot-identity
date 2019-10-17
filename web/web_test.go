@@ -93,7 +93,7 @@ func (id *mockIdentity) DeviceUpdate(orgID, deviceID string, req *service.Device
 		status = domain.StatusWaiting
 	}
 
-	return db.DeviceUpdate(deviceID, status)
+	return db.DeviceUpdate(deviceID, status, req.DeviceData)
 }
 
 // EnrollDevice mocks enrolling a device

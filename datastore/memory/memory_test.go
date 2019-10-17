@@ -278,7 +278,7 @@ func TestStore_DeviceUpdate(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			mem := NewStore()
-			if err := mem.DeviceUpdate(tt.args.deviceID, tt.args.status); (err != nil) != tt.wantErr {
+			if err := mem.DeviceUpdate(tt.args.deviceID, tt.args.status, ""); (err != nil) != tt.wantErr {
 				t.Errorf("Store.DeviceUpdate() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})

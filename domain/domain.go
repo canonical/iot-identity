@@ -61,4 +61,5 @@ type Enrollment struct {
 	Credentials  Credentials  `json:"credentials,omitempty"`
 	Organization Organization `json:"organization"`
 	Status       Status       `json:"status"`
+	DeviceData   string       `json:"deviceData"`
 }

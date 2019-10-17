@@ -39,14 +39,21 @@ func (db *Store) createDeviceTable() error {
 	}
 
 	_, err = db.Exec(createDeviceBMSIndexSQL)
-	return err
+	if err != nil {
+		return err
+	}
+
+	// The alter table calls may fail if the field already exists
+	_, _ = db.Exec(alterDeviceAddDeviceData)
+	return nil
 }
 
 // DeviceNew creates a new device registration
 func (db *Store) DeviceNew(d datastore.DeviceNewRequest) (string, error) {
 	var id int64
 	var deviceID = datastore.GenerateID()
-	err := db.QueryRow(createDeviceSQL, deviceID, d.OrganizationID, d.Brand, d.Model, d.SerialNumber, d.Credentials.PrivateKey, d.Credentials.Certificate, d.Credentials.MQTTURL, d.Credentials.MQTTPort).Scan(&id)
+
+	err := db.QueryRow(createDeviceSQL, deviceID, d.OrganizationID, d.Brand, d.Model, d.SerialNumber, d.Credentials.PrivateKey, d.Credentials.Certificate, d.Credentials.MQTTURL, d.Credentials.MQTTPort, d.DeviceData).Scan(&id)
 	if err != nil {
 		log.Printf("Error creating device: %v\n", err)
 	}
@@ -65,7 +72,7 @@ func (db *Store) DeviceGet(brand, model, serial string) (*domain.Enrollment, err
 	err := db.QueryRow(getDeviceSQL, brand, model, serial).Scan(
 		&d.ID, &d.Organization.ID, &d.Device.Brand, &d.Device.Model, &d.Device.SerialNumber,
 		&d.Credentials.PrivateKey, &d.Credentials.Certificate, &d.Credentials.MQTTURL, &d.Credentials.MQTTPort,
-		&d.Device.StoreID, &d.Device.DeviceKey, &d.Status)
+		&d.Device.StoreID, &d.Device.DeviceKey, &d.Status, &d.DeviceData)
 	if err != nil {
 		log.Printf("Error retrieving device: %v\n", err)
 		return &d, fmt.Errorf("error retrieving device: %v", err)
@@ -134,7 +141,7 @@ func (db *Store) DeviceList(orgID string) ([]domain.Enrollment, error) {
 		d := domain.Enrollment{}
 		err := rows.Scan(&d.ID, &d.Organization.ID, &d.Device.Brand, &d.Device.Model, &d.Device.SerialNumber,
 			&d.Credentials.Certificate, &d.Credentials.MQTTURL, &d.Credentials.MQTTPort,
-			&d.Device.StoreID, &d.Device.DeviceKey, &d.Status)
+			&d.Device.StoreID, &d.Device.DeviceKey, &d.Status, &d.DeviceData)
 		if err != nil {
 			return nil, err
 		}
@@ -145,8 +152,8 @@ func (db *Store) DeviceList(orgID string) ([]domain.Enrollment, error) {
 }
 
 // DeviceUpdate updates a device registration
-func (db *Store) DeviceUpdate(deviceID string, status domain.Status) error {
-	_, err := db.Exec(updateDeviceSQL, deviceID, status)
+func (db *Store) DeviceUpdate(deviceID string, status domain.Status, deviceData string) error {
+	_, err := db.Exec(updateDeviceSQL, deviceID, status, deviceData)
 	if err != nil {
 		log.Printf("Error updating the device: %v\n", err)
 	}

@@ -81,6 +81,7 @@ func (id IdentityService) RegisterDevice(req *RegisterDeviceRequest) (string, er
 			MQTTURL:     id.Settings.MQTTUrl, // Using a default URL for all devices
 			MQTTPort:    id.Settings.MQTTPort,
 		},
+		DeviceData: req.DeviceData,
 	}
 	return id.DB.DeviceNew(d)
 }
@@ -99,6 +100,13 @@ func (id IdentityService) DeviceUpdate(orgID, deviceID string, req *DeviceUpdate
 	device, err := id.DB.DeviceGetByID(deviceID)
 	if err != nil {
 		return err
+	}
+
+	// Update the device data, if it has changed
+	if device.DeviceData != req.DeviceData {
+		if err := id.DB.DeviceUpdate(device.ID, device.Status, req.DeviceData); err != nil {
+			return err
+		}
 	}
 
 	if req.Status == int(domain.StatusEnrolled) {
@@ -127,5 +135,5 @@ func (id IdentityService) DeviceUpdate(orgID, deviceID string, req *DeviceUpdate
 		}
 	}
 
-	return id.DB.DeviceUpdate(device.ID, device.Status)
+	return id.DB.DeviceUpdate(device.ID, device.Status, req.DeviceData)
 }

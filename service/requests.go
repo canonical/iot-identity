@@ -33,6 +33,7 @@ type RegisterDeviceRequest struct {
 	Brand          string `json:"brand"`
 	Model          string `json:"model"`
 	SerialNumber   string `json:"serial"`
+	DeviceData     string `json:"deviceData"`
 }
 
 // EnrollDeviceRequest is the request to enroll a device via assertions
@@ -43,5 +44,6 @@ type EnrollDeviceRequest struct {
 
 // DeviceUpdateRequest holds request to update a device registration
 type DeviceUpdateRequest struct {
-	Status int `json:"status"`
+	DeviceData string `json:"deviceData"`
+	Status     int    `json:"status"`
 }

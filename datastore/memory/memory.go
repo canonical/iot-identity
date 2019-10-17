@@ -204,7 +204,7 @@ func (mem *Store) DeviceGetByID(deviceID string) (*domain.Enrollment, error) {
 }
 
 // DeviceUpdate update a device for selected fields
-func (mem *Store) DeviceUpdate(deviceID string, status domain.Status) error {
+func (mem *Store) DeviceUpdate(deviceID string, status domain.Status, deviceData string) error {
 	found := false
 	roll := []domain.Enrollment{}
 
