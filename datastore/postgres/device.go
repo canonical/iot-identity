@@ -100,7 +100,7 @@ func (db *Store) DeviceGetByID(deviceID string) (*domain.Enrollment, error) {
 	err := db.QueryRow(getDeviceByIDSQL, deviceID).Scan(
 		&d.ID, &d.Organization.ID, &d.Device.Brand, &d.Device.Model, &d.Device.SerialNumber,
 		&d.Credentials.PrivateKey, &d.Credentials.Certificate, &d.Credentials.MQTTURL, &d.Credentials.MQTTPort,
-		&d.Device.StoreID, &d.Device.DeviceKey, &d.Status)
+		&d.Device.StoreID, &d.Device.DeviceKey, &d.Status, &d.DeviceData)
 	if err != nil {
 		log.Printf("Error retrieving device: %v\n", err)
 		return &d, fmt.Errorf("error retrieving device: %v", err)

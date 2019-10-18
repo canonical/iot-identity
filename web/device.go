@@ -22,13 +22,12 @@ package web
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/CanonicalLtd/iot-identity/service"
 	"github.com/gorilla/mux"
+	"github.com/snapcore/snapd/asserts"
 	"io"
 	"log"
 	"net/http"
-
-	"github.com/CanonicalLtd/iot-identity/service"
-	"github.com/snapcore/snapd/asserts"
 )
 
 // DeviceList fetches device registrations
