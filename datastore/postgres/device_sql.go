@@ -62,7 +62,7 @@ where device_id=$1`
 
 const enrollDeviceSQL = `
 update device
-set store_id=$4, device_key=$5, status=$6, device_data=$7
+set store_id=$4, device_key=$5, status=$6
 where brand=$1 and model=$2 and serial_number=$3
 `
 
