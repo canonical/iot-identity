@@ -22,8 +22,8 @@ package service
 import (
 	"testing"
 
-	"github.com/CanonicalLtd/iot-identity/config"
-	"github.com/CanonicalLtd/iot-identity/datastore/memory"
+	"github.com/bugraaydogar/iot-identity/config"
+	"github.com/bugraaydogar/iot-identity/datastore/memory"
 )
 
 func TestIdentityService_DeviceList(t *testing.T) {

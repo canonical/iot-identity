@@ -21,9 +21,10 @@ package service
 
 import (
 	"fmt"
-	"github.com/CanonicalLtd/iot-identity/datastore"
-	"github.com/CanonicalLtd/iot-identity/domain"
-	"github.com/CanonicalLtd/iot-identity/service/cert"
+
+	"github.com/bugraaydogar/iot-identity/datastore"
+	"github.com/bugraaydogar/iot-identity/domain"
+	"github.com/bugraaydogar/iot-identity/service/cert"
 )
 
 // RegisterOrganization registers a new organization with the service

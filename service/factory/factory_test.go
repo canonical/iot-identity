@@ -20,8 +20,9 @@
 package factory
 
 import (
-	"github.com/CanonicalLtd/iot-identity/config"
 	"testing"
+
+	"github.com/bugraaydogar/iot-identity/config"
 )
 
 func TestCreateDataStore(t *testing.T) {

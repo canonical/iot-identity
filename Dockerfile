@@ -1,6 +1,6 @@
 FROM golang:1.12 as builder1
-COPY . ./src/github.com/CanonicalLtd/iot-identity
-WORKDIR /go/src/github.com/CanonicalLtd/iot-identity
+COPY . ./src/github.com/bugraaydogar/iot-identity
+WORKDIR /go/src/github.com/bugraaydogar/iot-identity
 RUN ./get-deps.sh
 RUN CGO_ENABLED=1 GOOS=linux go build -a -o /go/bin/identity -ldflags='-extldflags "-static"' cmd/identity/main.go
 

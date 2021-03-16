@@ -14,7 +14,7 @@ The project uses vendorized dependencies using `govendor`.
 Development has been done on minimum Go version 1.12.1.
 
 ```
-$ go get github.com/CanonicalLtd/iot-identity
+$ go get github.com/bugraaydogar/iot-identity
 $ cd iot-identity
 $ ./get-deps.sh
 $ go build -mod=vendor ./...
@@ -43,9 +43,9 @@ The service listens on 8030 by default.
 Before contributing you should sign [Canonical's contributor agreement][1],
 it’s the easiest way for you to give us permission to use your contributions.
 
-[travis-image]: https://travis-ci.org/CanonicalLtd/iot-identity.svg?branch=master
-[travis-url]: https://travis-ci.org/CanonicalLtd/iot-identity
-[goreportcard-image]: https://goreportcard.com/badge/github.com/CanonicalLtd/iot-identity
-[goreportcard-url]: https://goreportcard.com/report/github.com/CanonicalLtd/iot-identity
-[codecov-url]: https://codecov.io/gh/CanonicalLtd/iot-identity
-[codecov-image]: https://codecov.io/gh/CanonicalLtd/iot-identity/branch/master/graph/badge.svg
+[travis-image]: https://travis-ci.org/bugraaydogar/iot-identity.svg?branch=master
+[travis-url]: https://travis-ci.org/bugraaydogar/iot-identity
+[goreportcard-image]: https://goreportcard.com/badge/github.com/bugraaydogar/iot-identity
+[goreportcard-url]: https://goreportcard.com/report/github.com/bugraaydogar/iot-identity
+[codecov-url]: https://codecov.io/gh/bugraaydogar/iot-identity
+[codecov-image]: https://codecov.io/gh/bugraaydogar/iot-identity/branch/master/graph/badge.svg

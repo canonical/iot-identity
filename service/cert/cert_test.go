@@ -22,7 +22,7 @@ package cert
 import (
 	"testing"
 
-	"github.com/CanonicalLtd/iot-identity/datastore/memory"
+	"github.com/bugraaydogar/iot-identity/datastore/memory"
 )
 
 func Test_getCertificateAuthority(t *testing.T) {

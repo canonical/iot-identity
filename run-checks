@@ -151,7 +151,7 @@ if [ ! -z "$UNIT" ]; then
     echo "mode: $COVERMODE" > .coverage/coverage.out
 
     echo Building
-    go build -v github.com/CanonicalLtd/iot-identity/...
+    go build -v github.com/bugraaydogar/iot-identity/...
 
     # tests
     echo Running tests from "$PWD"

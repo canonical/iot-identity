@@ -23,9 +23,9 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/CanonicalLtd/iot-identity/config"
-	"github.com/CanonicalLtd/iot-identity/datastore"
-	"github.com/CanonicalLtd/iot-identity/domain"
+	"github.com/bugraaydogar/iot-identity/config"
+	"github.com/bugraaydogar/iot-identity/datastore"
+	"github.com/bugraaydogar/iot-identity/domain"
 	"github.com/snapcore/snapd/asserts"
 )
 

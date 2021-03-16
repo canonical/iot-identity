@@ -20,9 +20,10 @@
 package service
 
 import (
-	"github.com/CanonicalLtd/iot-identity/config"
-	"github.com/CanonicalLtd/iot-identity/datastore/memory"
 	"testing"
+
+	"github.com/bugraaydogar/iot-identity/config"
+	"github.com/bugraaydogar/iot-identity/datastore/memory"
 )
 
 var settings = config.ParseArgs()

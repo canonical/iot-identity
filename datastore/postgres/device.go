@@ -21,9 +21,10 @@ package postgres
 
 import (
 	"fmt"
-	"github.com/CanonicalLtd/iot-identity/datastore"
-	"github.com/CanonicalLtd/iot-identity/domain"
 	"log"
+
+	"github.com/bugraaydogar/iot-identity/datastore"
+	"github.com/bugraaydogar/iot-identity/domain"
 )
 
 // createDeviceTable creates the database table for devices with its indexes

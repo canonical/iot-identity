@@ -21,8 +21,9 @@ package memory
 
 import (
 	"fmt"
-	"github.com/CanonicalLtd/iot-identity/datastore"
-	"github.com/CanonicalLtd/iot-identity/domain"
+
+	"github.com/bugraaydogar/iot-identity/datastore"
+	"github.com/bugraaydogar/iot-identity/domain"
 )
 
 // Store implements an in-memory store for testing

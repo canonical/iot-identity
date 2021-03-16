@@ -21,10 +21,11 @@ package factory
 
 import (
 	"fmt"
-	"github.com/CanonicalLtd/iot-identity/config"
-	"github.com/CanonicalLtd/iot-identity/datastore"
-	"github.com/CanonicalLtd/iot-identity/datastore/memory"
-	"github.com/CanonicalLtd/iot-identity/datastore/postgres"
+
+	"github.com/bugraaydogar/iot-identity/config"
+	"github.com/bugraaydogar/iot-identity/datastore"
+	"github.com/bugraaydogar/iot-identity/datastore/memory"
+	"github.com/bugraaydogar/iot-identity/datastore/postgres"
 )
 
 // CreateDataStore is the factory method to create a data store

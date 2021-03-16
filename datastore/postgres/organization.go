@@ -20,9 +20,10 @@
 package postgres
 
 import (
-	"github.com/CanonicalLtd/iot-identity/datastore"
-	"github.com/CanonicalLtd/iot-identity/domain"
 	"log"
+
+	"github.com/bugraaydogar/iot-identity/datastore"
+	"github.com/bugraaydogar/iot-identity/domain"
 )
 
 // createOrganizationTable creates the database table for organizations with its indexes
