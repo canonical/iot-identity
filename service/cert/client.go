@@ -28,7 +28,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/CanonicalLtd/iot-identity/domain"
+	"github.com/canonical/iot-identity/domain"
 )
 
 // CreateClientCert creates a signed client certificate

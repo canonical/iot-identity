@@ -22,7 +22,7 @@ package web
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/CanonicalLtd/iot-identity/service"
+	"github.com/canonical/iot-identity/service"
 	"github.com/gorilla/mux"
 	"github.com/snapcore/snapd/asserts"
 	"io"

@@ -24,7 +24,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/CanonicalLtd/iot-identity/config"
+	"github.com/canonical/iot-identity/config"
 )
 
 const model1 = `type: model

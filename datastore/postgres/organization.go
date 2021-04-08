@@ -20,8 +20,8 @@
 package postgres
 
 import (
-	"github.com/CanonicalLtd/iot-identity/datastore"
-	"github.com/CanonicalLtd/iot-identity/domain"
+	"github.com/canonical/iot-identity/datastore"
+	"github.com/canonical/iot-identity/domain"
 	"log"
 )
 

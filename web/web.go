@@ -23,8 +23,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/CanonicalLtd/iot-identity/config"
-	"github.com/CanonicalLtd/iot-identity/service"
+	"github.com/canonical/iot-identity/config"
+	"github.com/canonical/iot-identity/service"
 	"github.com/gorilla/mux"
 )
 
