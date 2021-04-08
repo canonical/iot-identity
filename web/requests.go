@@ -24,7 +24,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/CanonicalLtd/iot-identity/domain"
+	"github.com/canonical/iot-identity/domain"
 )
 
 // JSONHeader is the header for JSON responses

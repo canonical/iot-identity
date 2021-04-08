@@ -23,7 +23,7 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/CanonicalLtd/iot-identity/config"
+	"github.com/canonical/iot-identity/config"
 )
 
 func TestIdentityService_RegisterOrganization(t *testing.T) {

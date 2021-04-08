@@ -27,7 +27,7 @@ import (
 	"path"
 	"strings"
 
-	"github.com/CanonicalLtd/iot-identity/service/cert"
+	"github.com/canonical/iot-identity/service/cert"
 )
 
 // Default settings
