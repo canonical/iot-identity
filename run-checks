@@ -152,7 +152,7 @@ if [ ! -z "$UNIT" ]; then
 
     # tests
     echo Running tests from "$PWD"
-    for pkg in $(go list); do
+    for pkg in $(go list ./...); do
         go test -i "$pkg"
         $goctest -v -coverprofile=.coverage/profile.out -covermode="$COVERMODE" "$pkg"
         append_coverage .coverage/profile.out

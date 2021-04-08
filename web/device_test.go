@@ -27,6 +27,11 @@ import (
 	"github.com/canonical/iot-identity/config"
 )
 
+var _ = func() bool {
+	testing.Init()
+	return true
+}()
+
 const model1 = `type: model
 authority-id: canonical
 series: 16

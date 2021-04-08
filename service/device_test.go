@@ -26,6 +26,11 @@ import (
 	"github.com/canonical/iot-identity/datastore/memory"
 )
 
+var _ = func() bool {
+	testing.Init()
+	return true
+}()
+
 func TestIdentityService_DeviceList(t *testing.T) {
 	settings := &config.Settings{RootCertsDir: "../datastore/test_data"}
 	db := memory.NewStore()
