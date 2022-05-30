@@ -10,19 +10,18 @@ The Identity service plays the role of managing these assets and enabling the co
 The Identity Service is primarily in focus when the new device comes online. The device will be preconfigured to connect to the Identity Service, providing its Model and Serial assertions. The Identity Service registry will contain the primary ownership details for the device (customer name, store ID) and generates certificates and credentials for the device.
 
 ## Build
-The project uses vendorized dependencies using `govendor`.
+The project is using go modules.
 Development has been done on minimum Go version 1.12.1.
 
 ```
-$ go get github.com/canonical/iot-identity
 $ cd iot-identity
-$ ./get-deps.sh
-$ go build -mod=vendor ./...
+$ go mod tidy
+$ go build cmd/identity/main.go
 ```
 
 ## Run
 ```
-go run -mod=vendor cmd/identity/main.go
+go run cmd/identity/main.go
   -configdir string
         Directory path to the config file (default ".")
   -datasource string
